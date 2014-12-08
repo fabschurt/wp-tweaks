@@ -1,0 +1,24 @@
+{
+    "name": "fabschurt/wp-tweaks",
+    "type": "wordpress-muplugin",
+    "description": "Some useful WP tweaks.",
+    "authors": [
+        {
+            "name": "Fabien Schurter",
+            "email": "dev@fabschurt.net",
+            "homepage": "http://fabschurt.net",
+            "role": "Developer"
+        }
+    ],
+    "license": "MIT",
+    "homepage": "https://github.com/fabschurt/wp-tweaks",
+    "support": {
+        "email": "dev@fabschurt.net",
+        "issues": "https://github.com/fabschurt/wp-tweaks/issues",
+        "source": "https://github.com/fabschurt/wp-tweaks"
+    },
+    "prefer-stable": true,
+    "require": {
+        "composer/installers": "~1.0"
+    }
+}
