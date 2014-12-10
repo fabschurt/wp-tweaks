@@ -32,3 +32,39 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
+
+// Clean HTML <head> up a bit
+remove_action('wp_head', 'adjacent_posts_rel_link_wp_head');
+
+// Remove the «Private» label from the beginning of private posts' titles
+add_filter('private_title_format', function($title) {
+    return '%s';
+});
+
+// Hide frontend admin bar from regular users
+add_filter('show_admin_bar', function($show_admin_bar) {
+    return current_user_can('manage_options');
+});
+
+// Ensure that some sensitive admin menus are hidden from regular users
+add_action('admin_menu', function() {
+    if (!current_user_can('manage_options')) {
+        remove_menu_page('wpfront-user-role-editor-all-roles');
+        remove_menu_page('tools.php');
+        remove_menu_page('options-general.php');
+    }
+});
+
+// In user list, hide super admin users from all but themselves
+add_action('pre_user_query', function() {
+    if (current_user_can('manage_options')) {
+        return;
+    }
+
+    global $wpdb;
+    $user_search->query_where = str_replace(
+        'WHERE 1=1',
+        "WHERE 1=1 AND {$wpdb->users}.ID != 1",
+        $user_search->query_where
+    );
+});
