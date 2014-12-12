@@ -123,6 +123,30 @@ function _fswpt_get_i18n_post_id($base_post_id)
 }
 
 /**
+ * Return the right term ID, according on current language.
+ *
+ * Compatible with: Polylang.
+ *
+ * @param integer $base_term_id
+ *
+ * @return integer
+ */
+function _fswpt_get_i18n_term_id($base_term_id)
+{
+    // Sanity check
+    if (!function_exists('is_plugin_active')) {
+        require_once ABSPATH.'wp-admin/includes/plugin.php';
+    }
+
+    $term_id = $base_term_id;
+    if (is_plugin_active('polylang/polylang.php')) {
+        $term_id = pll_get_term($base_term_id);
+    }
+
+    return intval($term_id);
+}
+
+/**
  * Return the correct permalink for a post, according to current language.
  *
  * @param integer $base_post_id
