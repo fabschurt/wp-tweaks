@@ -141,6 +141,39 @@ function _fswpt_get_i18n_permalink($base_post_id, $escape = true)
     return $permalink;
 }
 
+/**
+ * Get a theme asset's absolute URL.
+ *
+ * @param string  $relative_url
+ * @param boolean $escape
+ *
+ * @return string
+ */
+function _fswpt_get_asset($relative_url, $escape = true)
+{
+    $url = get_stylesheet_directory_uri()."/{$relative_url}";
+    if ($escape) {
+        $url = esc_url($url);
+    }
+
+    return $url;
+}
+
+/**
+ * Cleanly terminate an AJAX call in case of error.
+ *
+ * @param string $error_msg
+ *
+ * @return void
+ */
+function _fswpt_terminate_ajax($error_msg = 'An AJAX error has occured.')
+{
+    header('HTTP/1.0 500 Internal Server Error');
+    header('Content-Type: text/plain; charset=UTF-8');
+    echo $error_msg;
+    exit();
+}
+
 // Clean HTML <head> up a bit
 remove_action('wp_head', 'adjacent_posts_rel_link_wp_head');
 
