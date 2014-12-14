@@ -253,3 +253,12 @@ add_action('pre_user_query', function() {
         $user_search->query_where
     );
 });
+
+// In development, send all outbound e-mails to the blog's e-mail address
+add_filter('wp_mail', function (Array $params) {
+    if (defined('WP_ENV') && WP_ENV === 'development') {
+        $params['to'] = get_bloginfo('admin_email');
+    }
+
+    return $params;
+});
