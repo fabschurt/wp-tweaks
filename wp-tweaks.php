@@ -34,9 +34,11 @@ THE SOFTWARE.
 */
 
 /**
- * Get the passed taxonomy term's current (1-based) level in taxonomy hierarchy.
+ * Returns a taxonomy term's current (1-based) level in taxonomy hierarchy.
  *
  * @param object $term_object
+ *
+ * @throws InvalidArgumentException If the passed term object is not valid
  *
  * @return integer
  */
@@ -51,11 +53,13 @@ function _fswpt_get_taxonomy_term_level($term_object)
 }
 
 /**
- * Get the passed taxonomy term's highest ancestor in taxonomy hierarchy.
+ * Returns a taxonomy term's highest ancestor in taxonomy hierarchy.
  *
  * @param object $term_object
  *
- * @return WP_Term|boolean A WP_Term object on success, false on failure.
+ * @throws InvalidArgumentException If the passed term object is not valid
+ *
+ * @return WP_Term|boolean A WP_Term object on success, false on failure
  */
 function _fswpt_get_taxonomy_term_ancestor($term_object)
 {
@@ -75,12 +79,12 @@ function _fswpt_get_taxonomy_term_ancestor($term_object)
 }
 
 /**
- * Get the first taxonomy term for a post.
+ * Returns the first taxonomy term attached to a post.
  *
  * @param integer $post_id
  * @param string  $taxonomy
  *
- * @return WP_Term|false A WP_Term object on success, false on failure.
+ * @return WP_Term|boolean A WP_Term object on success, false on failure
  */
 function _fswpt_get_post_main_taxonomy_term($post_id, $taxonomy = 'category')
 {
@@ -99,7 +103,7 @@ function _fswpt_get_post_main_taxonomy_term($post_id, $taxonomy = 'category')
 }
 
 /**
- * Return the correct post ID for a post, according to current language.
+ * Returns a post ID, according to current language.
  *
  * Compatible with: Polylang.
  *
@@ -123,7 +127,7 @@ function _fswpt_get_i18n_post_id($base_post_id)
 }
 
 /**
- * Return the right term ID, according on current language.
+ * Returns a taxonomy term ID, according to current language.
  *
  * Compatible with: Polylang.
  *
@@ -147,7 +151,7 @@ function _fswpt_get_i18n_term_id($base_term_id)
 }
 
 /**
- * Return the correct permalink for a post, according to current language.
+ * Returns the permalink for a post, according to current language.
  *
  * @param integer $base_post_id
  * @param boolean $escape
@@ -166,7 +170,7 @@ function _fswpt_get_i18n_permalink($base_post_id, $escape = true)
 }
 
 /**
- * Get a theme asset's absolute URL.
+ * Returns the absolute URL of a theme asset.
  *
  * @param string  $relative_url
  * @param boolean $escape
@@ -184,7 +188,7 @@ function _fswpt_get_asset($relative_url, $escape = true)
 }
 
 /**
- * Get the absolute URL of an image attachment, according to format.
+ * Returns the absolute URL of an image attachment, according to format.
  *
  * @param integer $attachment_id
  * @param string  $format
@@ -204,7 +208,7 @@ function _fswpt_get_image_src($attachment_id, $format = 'thumbnail', $escape = t
 }
 
 /**
- * Cleanly terminate an AJAX call in case of error.
+ * Cleanly terminates an AJAX call in case of error.
  *
  * @param string $error_msg
  *
