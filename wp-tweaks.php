@@ -54,7 +54,7 @@ function _fswpt_get_taxonomy_term_level($term_object)
         throw new InvalidArgumentException('Invalid term object.');
     }
 
-    return count(get_ancestors(intval($term_object->term_id), $term_object->taxonomy)) + 1;
+    return count(get_ancestors($term_object->term_id, $term_object->taxonomy)) + 1;
 }
 
 /**
@@ -73,8 +73,8 @@ function _fswpt_get_taxonomy_term_ancestor($term_object)
         throw new InvalidArgumentException('Invalid term object.');
     }
 
-    $term_ancestors        = get_ancestors(intval($term_object->term_id), $term_object->taxonomy);
-    $term_highest_ancestor = get_term(intval(end($term_ancestors)), $term_object->taxonomy);
+    $term_ancestors        = get_ancestors($term_object->term_id, $term_object->taxonomy);
+    $term_highest_ancestor = get_term(end($term_ancestors), $term_object->taxonomy);
 
     if (!$term_highest_ancestor || is_wp_error($term_highest_ancestor)) {
         return false;
