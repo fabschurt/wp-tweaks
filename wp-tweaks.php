@@ -108,6 +108,49 @@ function _fswpt_get_post_main_taxonomy_term($post_id, $taxonomy = 'category')
 }
 
 /**
+ * Returns a string containing a list of comma-separated terms in a given taxonomy for a given post.
+ *
+ * @param integer $post_id
+ * @param string  $taxonomy_name
+ * @param boolean $with_links
+ *
+ * @return string
+ */
+function _fswpt_get_html_term_list_for_post($post_id, $taxonomy_name, $with_links = false)
+{
+    $terms_list = get_the_term_list($post_id, $taxonomy_name, '', ', ');
+    if (!$with_links) {
+        $terms_list = strip_tags($terms_list);
+    }
+
+    return $terms_list;
+}
+
+/**
+ * Returns a list of posts belonging to a given post type and filtered by an array of post IDs.
+ *
+ * @param string    $post_type
+ * @param integer[] $post_ids
+ * @param boolean   $as_array
+ *
+ * @return WP_Query|array
+ */
+function _fswpt_get_posts_per_ids($post_type, array $post_ids, $as_array = false)
+{
+    $list = new WP_Query(array(
+        'post_type'           => $post_type,
+        'post__in'            => $post_ids,
+        'posts_per_page'      => -1,
+        'ignore_sticky_posts' => true,
+    ));
+    if ($as_array) {
+        $list = $list->posts;
+    }
+
+    return $list;
+}
+
+/**
  * Returns a post ID, according to current language.
  *
  * Compatible with: Polylang.
