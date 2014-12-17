@@ -6,7 +6,7 @@ Plugin URI: https://github.com/fabschurt/wp-tweaks
 Description: Some useful WordPress tweaks.
 Author: Fabien Schurter
 Author URI: http://fabschurt.net/
-Version: 0.1.0
+Version: 0.2.0
 License: MIT
 License URI: http://opensource.org/licenses/MIT
 
