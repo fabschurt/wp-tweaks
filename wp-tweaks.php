@@ -227,6 +227,11 @@ function _fswpt_terminate_ajax($error_msg = 'An AJAX error has occured.')
     exit();
 }
 
+// Enforce locale to match current Polylang language
+if (is_plugin_active('polylang/polylang.php')) {
+    setlocale(LC_ALL, pll_current_language('locale'));
+}
+
 // Clean HTML <head> up a bit
 remove_action('wp_head', 'adjacent_posts_rel_link_wp_head');
 
