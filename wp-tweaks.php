@@ -33,6 +33,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
+// Load dependencies
+if (!function_exists('is_plugin_active')) {
+    require_once ABSPATH.'wp-admin/includes/plugin.php';
+}
+
 /**
  * Returns a taxonomy term's current (1-based) level in taxonomy hierarchy.
  *
