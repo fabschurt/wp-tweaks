@@ -23,6 +23,7 @@
         "composer/installers": "~1.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "~4.4"
+        "phpunit/phpunit": "~4.4",
+        "wp-cli/wp-cli": "~0.17"
     }
 }
