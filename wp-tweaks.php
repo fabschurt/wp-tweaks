@@ -39,7 +39,7 @@ if (!function_exists('is_plugin_active')) {
 }
 
 // Include helpers
-foreach (glob(__DIR__.'/helpers/*.php', GLOB_ERR) as $helper_file) {
+foreach (glob(__DIR__.'/src/helpers/*.php', GLOB_ERR) as $helper_file) {
     require_once $helper_file;
 }
 
