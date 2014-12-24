@@ -106,7 +106,6 @@ class MediaHelpersTest extends WP_UnitTestCase
 
     public function testAttachmentInsertionWithDefaultArgumentsReturnsIdOfLastInsertedAttachment()
     {
-        $this->deleteAllAttachments();
         $attachment_id   = _fswpt_insert_attachment("{$this->assetsPath}/Some_good_advice.pdf");
         $last_attachment = $this->getLastAttachmentRow();
         $this->assertSame($attachment_id, intval($last_attachment->ID));
@@ -136,7 +135,6 @@ class MediaHelpersTest extends WP_UnitTestCase
 
     public function testAttachmentInsertionAcceptsCustomParentId()
     {
-        $this->deleteAllAttachments();
         $parent_id = 9001;
         _fswpt_insert_attachment("{$this->assetsPath}/Some_good_advice.pdf", $parent_id);
         $last_attachment = $this->getLastAttachmentRow();
@@ -145,7 +143,6 @@ class MediaHelpersTest extends WP_UnitTestCase
 
     public function testAttachmentInsertionAcceptsCustomTitle()
     {
-        $this->deleteAllAttachments();
         $title = 'Awesome title';
         _fswpt_insert_attachment("{$this->assetsPath}/Some_good_advice.pdf", 0, $title);
         $last_attachment = $this->getLastAttachmentRow();
@@ -183,18 +180,5 @@ class MediaHelpersTest extends WP_UnitTestCase
         );
 
         return $attachments[0];
-    }
-
-    protected function deleteAllAttachments()
-    {
-        $attachments = get_posts(array(
-            'post_type'      => 'attachment',
-            'posts_per_page' => -1,
-            'post_status'    => 'any',
-
-        ));
-        foreach ($attachments as $attachment) {
-            wp_delete_post($attachment->ID, true);
-        }
     }
 }
