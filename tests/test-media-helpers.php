@@ -182,6 +182,11 @@ class MediaHelpersTest extends WpTestCase
         );
     }
 
+    /**
+     * @param integer $limit
+     *
+     * @return object|object[]
+     */
     protected function getLastAttachmentRows($limit = 1)
     {
         global $wpdb;
