@@ -141,6 +141,31 @@ class MediaHelpersTest extends WpTestCase
         $this->assertTrue(!empty($metadata));
     }
 
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testZipInsertionFailsIfFileDoesNotExist()
+    {
+        _fswpt_insert_attachments_from_zip($this->getWpFilesystem(), $this->getNonExistentFilePath());
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testZipInsertionFailsIfFileIsNotReadable()
+    {
+        _fswpt_insert_attachments_from_zip($this->getWpFilesystem(), $this->getNonReadableFile()->url());
+    }
+
+    /**
+     * @dataProvider      incompatibleFilePathProvider
+     * @expectedException InvalidArgumentException
+     */
+    public function testZipInsertionFailsIfFileIsNotZipArchive($file_path)
+    {
+        _fswpt_insert_attachments_from_zip($this->getWpFilesystem(), $file_path);
+    }
+
     public function incompatibleFilePathProvider()
     {
         return array(
