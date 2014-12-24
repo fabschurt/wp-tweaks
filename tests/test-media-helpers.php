@@ -166,6 +166,50 @@ class MediaHelpersTest extends WpTestCase
         _fswpt_insert_attachments_from_zip($this->getWpFilesystem(), $file_path);
     }
 
+    public function testZipInsertionWithDefaultArguments()
+    {
+        define('WP_TEMP_DIR', $this->getMockTempDir()->url());
+        _fswpt_insert_attachments_from_zip(
+            $this->getWpFilesystem(),
+            "{$this->getAssetsPath()}/zip-file.zip"
+        );
+        $last_attachments = $this->getLastAttachmentRows(3);
+        $this->assertSame(
+            $this->extractFieldValuesFromPostsArray('post_title', $last_attachments),
+            array(
+                'text-file',
+                'incompatible-image-file',
+                'Some_good_advice',
+            )
+        );
+
+        return $last_attachments;
+    }
+
+    /**
+     * @depends testZipInsertionWithDefaultArguments
+     */
+    public function testZipInsertionWithDefaultArgumentsCreatesOrphanAttachments($last_attachments)
+    {
+        $this->assertSame(
+            $this->extractFieldValuesFromPostsArray('post_parent', $last_attachments, 'intval'),
+            array(0, 0, 0)
+        );
+    }
+
+    public function testZipInsertionAcceptsCustomParentId()
+    {
+        _fswpt_insert_attachments_from_zip(
+            $this->getWpFilesystem(),
+            "{$this->getAssetsPath()}/zip-file.zip",
+            9001
+        );
+        $this->assertSame(
+            $this->extractFieldValuesFromPostsArray('post_parent', $this->getLastAttachmentRows(3), 'intval'),
+            array(9001, 9001, 9001)
+        );
+    }
+
     public function incompatibleFilePathProvider()
     {
         return array(
