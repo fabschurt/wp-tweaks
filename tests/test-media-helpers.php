@@ -137,8 +137,8 @@ class MediaHelpersTest extends WP_UnitTestCase
     public function testAttachmentInsertionAcceptsCustomParentId()
     {
         $this->deleteAllAttachments();
-        $parent_id       = 9001;
-        $attachment_id   = _fswpt_insert_attachment("{$this->assetsPath}/Some_good_advice.pdf", $parent_id);
+        $parent_id = 9001;
+        _fswpt_insert_attachment("{$this->assetsPath}/Some_good_advice.pdf", $parent_id);
         $last_attachment = $this->getLastAttachmentRow();
         $this->assertSame($parent_id, intval($last_attachment->post_parent));
     }
@@ -146,8 +146,8 @@ class MediaHelpersTest extends WP_UnitTestCase
     public function testAttachmentInsertionAcceptsCustomTitle()
     {
         $this->deleteAllAttachments();
-        $title           = 'Awesome title';
-        $attachment_id   = _fswpt_insert_attachment("{$this->assetsPath}/Some_good_advice.pdf", 0, $title);
+        $title = 'Awesome title';
+        _fswpt_insert_attachment("{$this->assetsPath}/Some_good_advice.pdf", 0, $title);
         $last_attachment = $this->getLastAttachmentRow();
         $this->assertSame($title, $last_attachment->post_title);
     }
