@@ -102,4 +102,29 @@ abstract class WpTestCase extends \WP_UnitTestCase
 
         return $wp_filesystem;
     }
+
+    /**
+     * @param string    $field_name
+     * @param WP_Post[] $posts_array
+     * @param callable  $filter_callback optional
+     *
+     * @return array
+     */
+    protected function extractFieldValuesFromPostsArray($field_name,
+                                                        array $posts_array,
+                                                        $filter_callback = null)
+    {
+        $container = array();
+        foreach ($posts_array as $post) {
+            if (isset($post->$field_name)) {
+                $value = $post->$field_name;
+                if (!is_null($filter_callback) && is_callable($filter_callback)) {
+                    $value = call_user_func($filter_callback, $value);
+                }
+                $container[] = $value;
+            }
+        }
+
+        return $container;
+    }
 }
