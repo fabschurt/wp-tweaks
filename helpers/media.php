@@ -147,7 +147,7 @@ function _fswpt_insert_attachments_from_zip(WP_Filesystem_Base $filesystem, $zip
     }
 
     // Try to create a temp dir
-    $tmp_dir_path = rtrim(get_temp_dir(), '/').'/'.sha1(uniqid('fswpt_', true));
+    $tmp_dir_path = rtrim(get_temp_dir(), '/').'/'.uniqid('fswpt_', true);
     if (!$filesystem->mkdir($tmp_dir_path, 0777)) {
         throw new RuntimeException('Could not create a temporary directory.');
     }
