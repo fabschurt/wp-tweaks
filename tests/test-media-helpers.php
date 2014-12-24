@@ -149,6 +149,33 @@ class MediaHelpersTest extends WP_UnitTestCase
         $this->assertSame($title, $last_attachment->post_title);
     }
 
+    public function testAttachmentTitleIsReadFromCorrespondingIptcTagAndTitlePassedAsArgumentIsIgnored()
+    {
+        _fswpt_insert_attachment("{$this->assetsPath}/image-with-some-iptc-tags.jpg", 0, 'Ignored title');
+        $last_attachment = $this->getLastAttachmentRow();
+        $data_provider   = $this->iptcTagsProvider();
+        $this->assertSame($data_provider[0][1], $last_attachment->post_title);
+
+        return $last_attachment;
+    }
+
+    /**
+     * @depends testAttachmentTitleIsReadFromCorrespondingIptcTagAndTitlePassedAsArgumentIsIgnored
+     */
+    public function testAttachmentContentIsReadFromCorrespondingIptcTag($last_attachment)
+    {
+        $data_provider = $this->iptcTagsProvider();
+        $this->assertSame($data_provider[1][1], $last_attachment->post_content);
+    }
+
+    public function testMetadataIsGenerated()
+    {
+        _fswpt_insert_attachment("{$this->assetsPath}/image-with-some-iptc-tags.jpg");
+        $last_attachment = $this->getLastAttachmentRow();
+        $metadata        = get_post_meta($last_attachment->ID, '_wp_attachment_metadata', true);
+        $this->assertTrue(!empty($metadata));
+    }
+
     public function incompatibleFilePathProvider()
     {
         return array(
