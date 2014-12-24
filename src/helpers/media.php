@@ -159,14 +159,17 @@ function _fswpt_insert_attachments_from_zip(WP_Filesystem_Base $filesystem, $zip
     }
 
     // Try to insert each file as attachment
-    $files = glob($tmp_dir_path.'/*');
-    foreach ($files as $file) {
+    $files = array_filter(scandir($tmp_dir_path), function($filename) {
+        return ($filename !== '.' && $filename !== '..');
+    });
+    foreach ($files as $filename) {
         // Sanity check
-        if (!is_file($file) || !is_readable($file) || !filesize($file)) {
+        $file_path = "{$tmp_dir_path}/{$filename}";
+        if (!is_file($file_path) || !is_readable($file_path) || !filesize($file_path)) {
             continue;
         }
 
-        _fswpt_insert_attachment($file, $parent_post_id);
+        _fswpt_insert_attachment($file_path, $parent_post_id);
     }
 
     // Clean the mess up
