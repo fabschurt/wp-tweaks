@@ -14,6 +14,11 @@ abstract class WpTestCase extends \WP_UnitTestCase
     private $mockFsRoot;
 
     /**
+     * @var vfsStreamDirectory
+     */
+    private $mockTempDir;
+
+    /**
      * @var string
      */
     private $nonExistentFilePath;
@@ -38,6 +43,16 @@ abstract class WpTestCase extends \WP_UnitTestCase
         }
 
         return $this->mockFsRoot;
+    }
+
+    protected function getMockTempDir()
+    {
+        if (is_null($this->mockTempDir)) {
+            $this->mockTempDir = new vfsStreamDirectory('tmp', 0777);
+            $this->getMockFilesystemRoot()->addChild($this->mockTempDir);
+        }
+
+        return $this->mockTempDir;
     }
 
     /**
