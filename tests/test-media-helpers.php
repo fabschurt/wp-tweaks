@@ -86,6 +86,72 @@ class MediaHelpersTest extends WP_UnitTestCase
         );
     }
 
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testAttachmentInsertionFailsIfFileDoesNotExist()
+    {
+        _fswpt_insert_attachment($this->nonExistentFilePath);
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testAttachmentInsertionFailsIfFileIsNotReadable()
+    {
+        $non_readable_file = new vfsStreamFile($this->nonReadableFileName, 0000);
+        $this->fsRoot->addChild($non_readable_file);
+        _fswpt_insert_attachment($non_readable_file->url());
+    }
+
+    public function testAttachmentInsertionWithDefaultArgumentsReturnsIdOfLastInsertedAttachment()
+    {
+        $this->deleteAllAttachments();
+        $attachment_id   = _fswpt_insert_attachment("{$this->assetsPath}/Some_good_advice.pdf");
+        $last_attachment = $this->getLastAttachmentRow();
+        $this->assertSame($attachment_id, intval($last_attachment->ID));
+
+        return $last_attachment;
+    }
+
+    /**
+     * @depends testAttachmentInsertionWithDefaultArgumentsReturnsIdOfLastInsertedAttachment
+     */
+    public function testAttachmentInsertionWithDefaultArgumentsCreatesAnOrphanAttachment($last_attachment)
+    {
+        $this->assertSame(intval($last_attachment->post_parent), 0);
+
+        return $last_attachment;
+    }
+
+    /**
+     * @depends testAttachmentInsertionWithDefaultArgumentsCreatesAnOrphanAttachment
+     */
+    public function testAttachmentInsertionWithDefaultArgumentsGetsTitleFromFileName($last_attachment)
+    {
+        $this->assertSame($last_attachment->post_title, 'Some_good_advice');
+
+        return $last_attachment;
+    }
+
+    public function testAttachmentInsertionAcceptsCustomParentId()
+    {
+        $this->deleteAllAttachments();
+        $parent_id       = 9001;
+        $attachment_id   = _fswpt_insert_attachment("{$this->assetsPath}/Some_good_advice.pdf", $parent_id);
+        $last_attachment = $this->getLastAttachmentRow();
+        $this->assertSame($parent_id, intval($last_attachment->post_parent));
+    }
+
+    public function testAttachmentInsertionAcceptsCustomTitle()
+    {
+        $this->deleteAllAttachments();
+        $title           = 'Awesome title';
+        $attachment_id   = _fswpt_insert_attachment("{$this->assetsPath}/Some_good_advice.pdf", 0, $title);
+        $last_attachment = $this->getLastAttachmentRow();
+        $this->assertSame($title, $last_attachment->post_title);
+    }
+
     public function incompatibleFilePathProvider()
     {
         return array(
@@ -100,5 +166,35 @@ class MediaHelpersTest extends WP_UnitTestCase
             array('105', 'This is a freakin\' title'),
             array('120', 'This is some useless description.'),
         );
+    }
+
+    protected function getLastAttachmentRow()
+    {
+        global $wpdb;
+
+        $attachments = $wpdb->get_results(
+            "
+            SELECT * FROM `{$wpdb->posts}`
+            WHERE `post_type` LIKE 'attachment'
+            AND `post_status` LIKE 'inherit'
+            ORDER BY `ID` DESC
+            LIMIT 1
+            "
+        );
+
+        return $attachments[0];
+    }
+
+    protected function deleteAllAttachments()
+    {
+        $attachments = get_posts(array(
+            'post_type'      => 'attachment',
+            'posts_per_page' => -1,
+            'post_status'    => 'any',
+
+        ));
+        foreach ($attachments as $attachment) {
+            wp_delete_post($attachment->ID, true);
+        }
     }
 }
