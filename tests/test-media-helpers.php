@@ -4,7 +4,7 @@ use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use org\bovigo\vfs\vfsStreamFile;
 
-class IptcParsingTest extends WP_UnitTestCase
+class MediaHelpersTest extends WP_UnitTestCase
 {
     /**
      * @var vfsStreamDirectory
