@@ -72,7 +72,7 @@ class MediaHelpersTest extends WpTestCase
     public function testAttachmentInsertionWithDefaultArgumentsReturnsIdOfLastInsertedAttachment()
     {
         $attachment_id   = _fswpt_insert_attachment("{$this->getAssetsPath()}/Some_good_advice.pdf");
-        $last_attachment = $this->getLastAttachmentRow();
+        $last_attachment = $this->getLastAttachmentRows();
         $this->assertSame($attachment_id, intval($last_attachment->ID));
 
         return $last_attachment;
@@ -102,7 +102,7 @@ class MediaHelpersTest extends WpTestCase
     {
         $parent_id = 9001;
         _fswpt_insert_attachment("{$this->getAssetsPath()}/Some_good_advice.pdf", $parent_id);
-        $last_attachment = $this->getLastAttachmentRow();
+        $last_attachment = $this->getLastAttachmentRows();
         $this->assertSame($parent_id, intval($last_attachment->post_parent));
     }
 
@@ -110,14 +110,14 @@ class MediaHelpersTest extends WpTestCase
     {
         $title = 'Awesome title';
         _fswpt_insert_attachment("{$this->getAssetsPath()}/Some_good_advice.pdf", 0, $title);
-        $last_attachment = $this->getLastAttachmentRow();
+        $last_attachment = $this->getLastAttachmentRows();
         $this->assertSame($title, $last_attachment->post_title);
     }
 
     public function testTitleIsReadFromIptcTagsAndTitlePassedAsArgumentIsIgnoredDuringAttachmentInsertion()
     {
         _fswpt_insert_attachment("{$this->getAssetsPath()}/image-with-some-iptc-tags.jpg", 0, 'Ignored title');
-        $last_attachment = $this->getLastAttachmentRow();
+        $last_attachment = $this->getLastAttachmentRows();
         $data_provider   = $this->iptcTagsProvider();
         $this->assertSame($data_provider[0][1], $last_attachment->post_title);
 
@@ -136,7 +136,7 @@ class MediaHelpersTest extends WpTestCase
     public function testMetadataIsGeneratedDuringAttachmentInsertion()
     {
         _fswpt_insert_attachment("{$this->getAssetsPath()}/image-with-some-iptc-tags.jpg");
-        $last_attachment = $this->getLastAttachmentRow();
+        $last_attachment = $this->getLastAttachmentRows();
         $metadata        = get_post_meta($last_attachment->ID, '_wp_attachment_metadata', true);
         $this->assertTrue(!empty($metadata));
     }
@@ -182,20 +182,20 @@ class MediaHelpersTest extends WpTestCase
         );
     }
 
-    protected function getLastAttachmentRow()
+    protected function getLastAttachmentRows($limit = 1)
     {
         global $wpdb;
 
-        $attachments = $wpdb->get_results(
+        $attachments = $wpdb->get_results($wpdb->prepare(
             "
             SELECT * FROM `{$wpdb->posts}`
             WHERE `post_type` LIKE 'attachment'
             AND `post_status` LIKE 'inherit'
             ORDER BY `ID` DESC
-            LIMIT 1
-            "
-        );
+            LIMIT %d
+            ", $limit
+        ));
 
-        return $attachments[0];
+        return (count($attachments) == 1 ? $attachments[0] : $attachments);
     }
 }
