@@ -1,46 +1,15 @@
 <?php
 
-use org\bovigo\vfs\vfsStream;
-use org\bovigo\vfs\vfsStreamDirectory;
-use org\bovigo\vfs\vfsStreamFile;
+use Fabschurt\WpTweaks\Tests\WpTestCase;
 
-class MediaHelpersTest extends WP_UnitTestCase
+class MediaHelpersTest extends WpTestCase
 {
-    /**
-     * @var vfsStreamDirectory
-     */
-    private $fsRoot;
-
-    /**
-     * @var string
-     */
-    private $nonExistentFilePath;
-
-    /**
-     * @var string
-     */
-    private $nonReadableFileName;
-
-    /**
-     * @var string
-     */
-    private $assetsPath;
-
-    public function setUp()
-    {
-        parent::setUp();
-        $this->fsRoot              = vfsStream::setup();
-        $this->nonExistentFilePath = $this->fsRoot->url().'/nil/void.0';
-        $this->nonReadableFileName = 'you-shall-not-read.me';
-        $this->assetsPath          = './tests/assets';
-    }
-
     /**
      * @expectedException InvalidArgumentException
      */
     public function testIptcParsingFailsIfFileDoesNotExist()
     {
-        _fswpt_get_iptc_tag_from_file($this->nonExistentFilePath, 'whatever');
+        _fswpt_get_iptc_tag_from_file($this->getNonExistentFilePath(), 'whatever');
     }
 
     /**
@@ -48,9 +17,7 @@ class MediaHelpersTest extends WP_UnitTestCase
      */
     public function testIptcParsingFailsIfFileIsNotReadable()
     {
-        $non_readable_file = new vfsStreamFile($this->nonReadableFileName, 0000);
-        $this->fsRoot->addChild($non_readable_file);
-        _fswpt_get_iptc_tag_from_file($non_readable_file->url(), 'whatever');
+        _fswpt_get_iptc_tag_from_file($this->getNonReadableFile()->url(), 'whatever');
     }
 
     /**
@@ -64,7 +31,7 @@ class MediaHelpersTest extends WP_UnitTestCase
 
     public function testIptcParsingReturnsFalseIfThereIsNoTag()
     {
-        $this->assertFalse(_fswpt_get_iptc_tag_from_file("{$this->assetsPath}/image-with-no-iptc-tag.jpg", '105'));
+        $this->assertFalse(_fswpt_get_iptc_tag_from_file("{$this->getAssetsPath()}/image-with-no-iptc-tag.jpg", '105'));
     }
 
     /**
@@ -73,7 +40,7 @@ class MediaHelpersTest extends WP_UnitTestCase
     public function testIptcTagsCanBeReadFromFile($iptc_tag_id, $iptc_tag_value)
     {
         $this->assertSame(
-            _fswpt_get_iptc_tag_from_file("{$this->assetsPath}/image-with-some-iptc-tags.jpg", $iptc_tag_id),
+            _fswpt_get_iptc_tag_from_file("{$this->getAssetsPath()}/image-with-some-iptc-tags.jpg", $iptc_tag_id),
             $iptc_tag_value
         );
     }
@@ -81,7 +48,7 @@ class MediaHelpersTest extends WP_UnitTestCase
     public function testIptcTagArraysCanBeReadFromFile()
     {
         $this->assertSame(
-            _fswpt_get_iptc_tag_from_file("{$this->assetsPath}/image-with-some-iptc-tags.jpg", '025', true),
+            _fswpt_get_iptc_tag_from_file("{$this->getAssetsPath()}/image-with-some-iptc-tags.jpg", '025', true),
             array('test', 'fake', 'dupe', 'mock', 'stub')
         );
     }
@@ -91,7 +58,7 @@ class MediaHelpersTest extends WP_UnitTestCase
      */
     public function testAttachmentInsertionFailsIfFileDoesNotExist()
     {
-        _fswpt_insert_attachment($this->nonExistentFilePath);
+        _fswpt_insert_attachment($this->getNonExistentFilePath());
     }
 
     /**
@@ -99,14 +66,12 @@ class MediaHelpersTest extends WP_UnitTestCase
      */
     public function testAttachmentInsertionFailsIfFileIsNotReadable()
     {
-        $non_readable_file = new vfsStreamFile($this->nonReadableFileName, 0000);
-        $this->fsRoot->addChild($non_readable_file);
-        _fswpt_insert_attachment($non_readable_file->url());
+        _fswpt_insert_attachment($this->getNonReadableFile()->url());
     }
 
     public function testAttachmentInsertionWithDefaultArgumentsReturnsIdOfLastInsertedAttachment()
     {
-        $attachment_id   = _fswpt_insert_attachment("{$this->assetsPath}/Some_good_advice.pdf");
+        $attachment_id   = _fswpt_insert_attachment("{$this->getAssetsPath()}/Some_good_advice.pdf");
         $last_attachment = $this->getLastAttachmentRow();
         $this->assertSame($attachment_id, intval($last_attachment->ID));
 
@@ -136,7 +101,7 @@ class MediaHelpersTest extends WP_UnitTestCase
     public function testAttachmentInsertionAcceptsCustomParentId()
     {
         $parent_id = 9001;
-        _fswpt_insert_attachment("{$this->assetsPath}/Some_good_advice.pdf", $parent_id);
+        _fswpt_insert_attachment("{$this->getAssetsPath()}/Some_good_advice.pdf", $parent_id);
         $last_attachment = $this->getLastAttachmentRow();
         $this->assertSame($parent_id, intval($last_attachment->post_parent));
     }
@@ -144,14 +109,14 @@ class MediaHelpersTest extends WP_UnitTestCase
     public function testAttachmentInsertionAcceptsCustomTitle()
     {
         $title = 'Awesome title';
-        _fswpt_insert_attachment("{$this->assetsPath}/Some_good_advice.pdf", 0, $title);
+        _fswpt_insert_attachment("{$this->getAssetsPath()}/Some_good_advice.pdf", 0, $title);
         $last_attachment = $this->getLastAttachmentRow();
         $this->assertSame($title, $last_attachment->post_title);
     }
 
     public function testTitleIsReadFromIptcTagsAndTitlePassedAsArgumentIsIgnoredDuringAttachmentInsertion()
     {
-        _fswpt_insert_attachment("{$this->assetsPath}/image-with-some-iptc-tags.jpg", 0, 'Ignored title');
+        _fswpt_insert_attachment("{$this->getAssetsPath()}/image-with-some-iptc-tags.jpg", 0, 'Ignored title');
         $last_attachment = $this->getLastAttachmentRow();
         $data_provider   = $this->iptcTagsProvider();
         $this->assertSame($data_provider[0][1], $last_attachment->post_title);
@@ -170,7 +135,7 @@ class MediaHelpersTest extends WP_UnitTestCase
 
     public function testMetadataIsGeneratedDuringAttachmentInsertion()
     {
-        _fswpt_insert_attachment("{$this->assetsPath}/image-with-some-iptc-tags.jpg");
+        _fswpt_insert_attachment("{$this->getAssetsPath()}/image-with-some-iptc-tags.jpg");
         $last_attachment = $this->getLastAttachmentRow();
         $metadata        = get_post_meta($last_attachment->ID, '_wp_attachment_metadata', true);
         $this->assertTrue(!empty($metadata));
@@ -179,8 +144,8 @@ class MediaHelpersTest extends WP_UnitTestCase
     public function incompatibleFilePathProvider()
     {
         return array(
-            array("{$this->assetsPath}/test-file.txt"),
-            array("{$this->assetsPath}/incompatible-image-file.png"),
+            array("{$this->getAssetsPath()}/test-file.txt"),
+            array("{$this->getAssetsPath()}/incompatible-image-file.png"),
         );
     }
 
