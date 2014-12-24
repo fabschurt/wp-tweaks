@@ -149,7 +149,7 @@ class MediaHelpersTest extends WP_UnitTestCase
         $this->assertSame($title, $last_attachment->post_title);
     }
 
-    public function testAttachmentTitleIsReadFromCorrespondingIptcTagAndTitlePassedAsArgumentIsIgnored()
+    public function testTitleIsReadFromIptcTagsAndTitlePassedAsArgumentIsIgnoredDuringAttachmentInsertion()
     {
         _fswpt_insert_attachment("{$this->assetsPath}/image-with-some-iptc-tags.jpg", 0, 'Ignored title');
         $last_attachment = $this->getLastAttachmentRow();
@@ -160,15 +160,15 @@ class MediaHelpersTest extends WP_UnitTestCase
     }
 
     /**
-     * @depends testAttachmentTitleIsReadFromCorrespondingIptcTagAndTitlePassedAsArgumentIsIgnored
+     * @depends testTitleIsReadFromIptcTagsAndTitlePassedAsArgumentIsIgnoredDuringAttachmentInsertion
      */
-    public function testAttachmentContentIsReadFromCorrespondingIptcTag($last_attachment)
+    public function testContentIsReadFromIptcTagsDuringAttachmentInsertion($last_attachment)
     {
         $data_provider = $this->iptcTagsProvider();
         $this->assertSame($data_provider[1][1], $last_attachment->post_content);
     }
 
-    public function testMetadataIsGenerated()
+    public function testMetadataIsGeneratedDuringAttachmentInsertion()
     {
         _fswpt_insert_attachment("{$this->assetsPath}/image-with-some-iptc-tags.jpg");
         $last_attachment = $this->getLastAttachmentRow();
