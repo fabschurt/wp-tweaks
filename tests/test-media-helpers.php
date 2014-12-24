@@ -11,10 +11,28 @@ class MediaHelpersTest extends WP_UnitTestCase
      */
     private $fsRoot;
 
+    /**
+     * @var string
+     */
+    private $nonExistentFilePath;
+
+    /**
+     * @var string
+     */
+    private $nonReadableFileName;
+
+    /**
+     * @var string
+     */
+    private $assetsPath;
+
     public function setUp()
     {
         parent::setUp();
-        $this->fsRoot = vfsStream::setup();
+        $this->fsRoot              = vfsStream::setup();
+        $this->nonExistentFilePath = $this->fsRoot->url().'/nil/void.0';
+        $this->nonReadableFileName = 'you-shall-not-read.me';
+        $this->assetsPath          = './tests/assets';
     }
 
     /**
@@ -22,8 +40,7 @@ class MediaHelpersTest extends WP_UnitTestCase
      */
     public function testIptcParsingFailsIfFileDoesNotExist()
     {
-        $non_existent_path = $this->fsRoot->url().'/nil/void.0';
-        _fswpt_get_iptc_tag_from_file($non_existent_path, 'whatever');
+        _fswpt_get_iptc_tag_from_file($this->nonExistentFilePath, 'whatever');
     }
 
     /**
@@ -31,9 +48,9 @@ class MediaHelpersTest extends WP_UnitTestCase
      */
     public function testIptcParsingFailsIfFileIsNotReadable()
     {
-        $non_readable_file_path = new vfsStreamFile('you-shall-not-read.me', 0000);
-        $this->fsRoot->addChild($non_readable_file_path);
-        _fswpt_get_iptc_tag_from_file($non_readable_file_path->url(), 'whatever');
+        $non_readable_file = new vfsStreamFile($this->nonReadableFileName, 0000);
+        $this->fsRoot->addChild($non_readable_file);
+        _fswpt_get_iptc_tag_from_file($non_readable_file->url(), 'whatever');
     }
 
     /**
@@ -47,7 +64,7 @@ class MediaHelpersTest extends WP_UnitTestCase
 
     public function testIptcParsingReturnsFalseIfThereIsNoTag()
     {
-        $this->assertFalse(_fswpt_get_iptc_tag_from_file('./tests/assets/image-with-no-iptc-tag.jpg', '105'));
+        $this->assertFalse(_fswpt_get_iptc_tag_from_file("{$this->assetsPath}/image-with-no-iptc-tag.jpg", '105'));
     }
 
     /**
@@ -56,7 +73,7 @@ class MediaHelpersTest extends WP_UnitTestCase
     public function testIptcTagsCanBeReadFromFile($iptc_tag_id, $iptc_tag_value)
     {
         $this->assertSame(
-            _fswpt_get_iptc_tag_from_file('./tests/assets/image-with-some-iptc-tags.jpg', $iptc_tag_id),
+            _fswpt_get_iptc_tag_from_file("{$this->assetsPath}/image-with-some-iptc-tags.jpg", $iptc_tag_id),
             $iptc_tag_value
         );
     }
@@ -64,7 +81,7 @@ class MediaHelpersTest extends WP_UnitTestCase
     public function testIptcTagArraysCanBeReadFromFile()
     {
         $this->assertSame(
-            _fswpt_get_iptc_tag_from_file('./tests/assets/image-with-some-iptc-tags.jpg', '025', true),
+            _fswpt_get_iptc_tag_from_file("{$this->assetsPath}/image-with-some-iptc-tags.jpg", '025', true),
             array('test', 'fake', 'dupe', 'mock', 'stub')
         );
     }
@@ -72,8 +89,8 @@ class MediaHelpersTest extends WP_UnitTestCase
     public function incompatibleFilePathProvider()
     {
         return array(
-            array('./tests/assets/test-file.txt'),
-            array('./tests/assets/incompatible-image-file.png'),
+            array("{$this->assetsPath}/test-file.txt"),
+            array("{$this->assetsPath}/incompatible-image-file.png"),
         );
     }
 
