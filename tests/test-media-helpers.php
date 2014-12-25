@@ -225,26 +225,4 @@ class MediaHelpersTest extends WpTestCase
             array('120', 'This is some useless description.'),
         );
     }
-
-    /**
-     * @param integer $limit
-     *
-     * @return object|object[]
-     */
-    protected function getLastAttachmentRows($limit = 1)
-    {
-        global $wpdb;
-
-        $attachments = $wpdb->get_results($wpdb->prepare(
-            "
-            SELECT * FROM `{$wpdb->posts}`
-            WHERE `post_type` LIKE 'attachment'
-            AND `post_status` LIKE 'inherit'
-            ORDER BY `ID` DESC
-            LIMIT %d
-            ", $limit
-        ));
-
-        return (count($attachments) == 1 ? $attachments[0] : $attachments);
-    }
 }

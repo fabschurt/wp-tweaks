@@ -127,4 +127,58 @@ abstract class WpTestCase extends \WP_UnitTestCase
 
         return $container;
     }
+
+    /**
+     * @return void
+     */
+    protected function setTestTheme()
+    {
+        add_filter('stylesheet', function() {
+            return 'twentyfifteen';
+        });
+        add_filter('template', function() {
+            return 'twentyfifteen';
+        });
+    }
+
+    /**
+     * @param integer $limit
+     *
+     * @return object|object[]
+     */
+    protected function getLastAttachmentRows($limit = 1)
+    {
+        global $wpdb;
+
+        $attachments = $wpdb->get_results($wpdb->prepare(
+            "
+            SELECT * FROM `{$wpdb->posts}`
+            WHERE `post_type` LIKE 'attachment'
+            AND `post_status` LIKE 'inherit'
+            ORDER BY `ID` DESC
+            LIMIT %d
+            ", $limit
+        ));
+
+        return (count($attachments) == 1 ? $attachments[0] : $attachments);
+    }
+
+    /**
+     * @return void
+     */
+    protected function deleteAllUploads()
+    {
+        $upload_dir_info = wp_upload_dir();
+        if (empty($upload_dir_info['basedir'])) {
+            throw new RuntimeException('wp_upload_dir() failed to return required information.');
+        }
+
+        $upload_dir = $upload_dir_info['basedir'];
+        $uploads    = array_filter(scandir($upload_dir), function($element) {
+            return ($element !== '.' && $element !== '..');
+        });
+        foreach ($uploads as $upload) {
+            $this->getWpFilesystem()->delete("{$upload_dir}/{$upload}", true);
+        }
+    }
 }
