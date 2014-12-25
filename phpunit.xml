@@ -5,7 +5,8 @@
          colors="true">
     <testsuites>
         <testsuite>
-            <directory prefix="test-" suffix=".php">./tests</directory>
+            <file>./tests/test-media-helpers.php</file>
+            <file>./tests/test-assets-helpers.php</file>
         </testsuite>
     </testsuites>
 </phpunit>
