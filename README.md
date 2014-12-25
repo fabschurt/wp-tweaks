@@ -9,6 +9,16 @@ GitHub, because GitHub is pretty cool (plus, free code hosting, yay!). It's also
 published on Packagist, just to make things a little easier for me in
 `composer.json`.
 
+The DocBlocks and inline comments for the various helpers and actions/filters
+are hopefully self-explanatory.
+
+This was also my first experiment in unit testing a WordPress plugin. I was
+expecting the process to be a pain in the ass, but it was surprisingly easy to
+set up thanks to the `scaffold plugin-tests` command of [wp-cli](http://wp-cli.org/)
+and some tweaking. However, testing a WordPress plugin remains inherently
+tedious because of the extensive use of procedural programming and global scope
+in WP.
+
 This plugin is licensed under the [MIT License](http://opensource.org/licenses/MIT).
 
 Disclaimer
