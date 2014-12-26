@@ -167,7 +167,7 @@ abstract class WpTestCase extends \WP_UnitTestCase
     }
 
     /**
-     * @return void
+     * @return boolean|void
      */
     protected function deleteAllUploads()
     {
@@ -177,7 +177,7 @@ abstract class WpTestCase extends \WP_UnitTestCase
         }
 
         $upload_dir = $upload_dir_info['basedir'];
-        $uploads    = array_filter(scandir($upload_dir), function($element) {
+        $uploads = array_filter(scandir($upload_dir), function($element) {
             return ($element !== '.' && $element !== '..');
         });
         foreach ($uploads as $upload) {
