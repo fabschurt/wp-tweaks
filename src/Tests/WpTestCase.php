@@ -184,4 +184,14 @@ abstract class WpTestCase extends \WP_UnitTestCase
             $this->getWpFilesystem()->delete("{$upload_dir}/{$upload}", true);
         }
     }
+
+    /**
+     * @param string
+     *
+     * @return string
+     */
+    protected function getPluginFileAbsolutePath($plugin_name)
+    {
+        return sprintf('%1$swp-content/plugins/%2$s/%2$s.php', ABSPATH, $plugin_name);
+    }
 }
