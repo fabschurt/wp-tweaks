@@ -45,6 +45,9 @@ abstract class WpTestCase extends \WP_UnitTestCase
         return $this->mockFsRoot;
     }
 
+    /**
+     * @return vfsStreamDirectory
+     */
     protected function getMockTempDir()
     {
         if (is_null($this->mockTempDir)) {
