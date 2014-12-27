@@ -36,6 +36,32 @@ class I18nHelpersTest extends WpTestCase
         deactivate_plugins($this->getPluginFileAbsolutePath('polylang'));
     }
 
+    public function testFswptGetI18nPostIdReturnsArgumentIfPolylangIsNotActivated()
+    {
+        $id = 9001;
+        $this->assertSame(_fswpt_get_i18n_post_id($id), $id);
+    }
+
+    public function testFswptGetI18nTermIdReturnsArgumentIfPolylangIsNotActivated()
+    {
+        $id = 9001;
+        $this->assertSame(_fswpt_get_i18n_post_id($id), $id);
+    }
+
+    public function testFswptGetI18nPostIdReturnsPostIdOfTranslatedPost()
+    {
+        $this->initPolylang();
+        $this->polylang->setCurrentLanguage('en');
+        $this->assertSame(_fswpt_get_i18n_post_id($this->frPostId), $this->enPostId);
+    }
+
+    public function testFswptGetI18nTermIdReturnsTermIdOfTranslatedTerm()
+    {
+        $this->initPolylang();
+        $this->polylang->setCurrentLanguage('en');
+        $this->assertSame(_fswpt_get_i18n_term_id($this->frTermId), $this->enTermId);
+    }
+
     /**
      * @return void
      */
