@@ -2,7 +2,6 @@
 
 use Fabschurt\WpTweaks\Tests\WpTestCase;
 use Fabschurt\WpTweaks\Tests\PolylangProxy;
-use Symfony\Component\Process\Process;
 
 class I18nHelpersTest extends WpTestCase
 {
