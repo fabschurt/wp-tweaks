@@ -29,7 +29,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Fabschurt\\WpTweaks\\": "src/"
+            "Fabschurt\\WpTweaks\\Tests\\": "tests/src/"
         }
     }
 }
