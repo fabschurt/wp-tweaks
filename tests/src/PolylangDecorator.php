@@ -2,20 +2,20 @@
 
 namespace Fabschurt\WpTweaks\Tests;
 
-class PolylangProxy
+class PolylangDecorator
 {
     /**
-     * @var object
+     * @var \Polylang
      */
-    private $internalInstance;
+    private $realSubject;
 
     /**
-     * @param object $polylang_object
-     * @param array  $languages
+     * @param \Polylang $polylang_object
+     * @param array     $languages
      */
     public function __construct($polylang_object, array $languages)
     {
-        $this->internalInstance = $polylang_object;
+        $this->realSubject = $polylang_object;
         $this->insertLanguages($languages);
     }
 
@@ -26,7 +26,33 @@ class PolylangProxy
      */
     public function setCurrentLanguage($language_code)
     {
-        $this->internalInstance->curlang = $this->internalInstance->model->get_language($language_code);
+        $this->realSubject->curlang = $this->realSubject->model->get_language($language_code);
+    }
+
+    /**
+     * Provides delegation to real subject for unknown instance methods.
+     *
+     * @param string $method_name
+     * @param array  $arguments
+     *
+     * @return mixed
+     */
+    public function __call($method_name, $arguments)
+    {
+        call_user_func_array(array($method_name, $this->realSubject), $arguments);
+    }
+
+    /**
+     * Provides delegation to real subject for unknown class methods.
+     *
+     * @param string $method_name
+     * @param array  $arguments
+     *
+     * @return mixed
+     */
+    public static function __callStatic($method_name, $arguments)
+    {
+        call_user_func_array(sprintf('%s::%s', get_class($this->realSubject), $method_name), $arguments);
     }
 
     /**
@@ -47,7 +73,7 @@ class PolylangProxy
             ) {
                 continue;
             }
-            $this->internalInstance->model->add_language($language);
+            $this->realSubject->model->add_language($language);
             $this->emptySettingsErrors();
         }
     }

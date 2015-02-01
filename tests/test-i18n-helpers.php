@@ -1,12 +1,12 @@
 <?php
 
 use Fabschurt\WpTweaks\Tests\WpTestCase;
-use Fabschurt\WpTweaks\Tests\PolylangProxy;
+use Fabschurt\WpTweaks\Tests\PolylangDecorator;
 
 class I18nHelpersTest extends WpTestCase
 {
     /**
-     * @var PolylangProxy
+     * @var PolylangDecorator
      */
     private $polylang;
 
@@ -68,7 +68,7 @@ class I18nHelpersTest extends WpTestCase
     {
         activate_plugin($this->getPluginFileAbsolutePath('polylang'));
         global $polylang;
-        $this->polylang = new PolylangProxy($polylang, array(
+        $this->polylang = new PolylangDecorator($polylang, array(
             array(
                 'name'       => 'English',
                 'locale'     => 'en_US',
