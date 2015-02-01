@@ -84,7 +84,6 @@ class I18nHelpersTest extends WpTestCase
                 'term_group' => '',
             ),
         ));
-
         $this->insertTestTerms();
         $this->insertTestPosts();
     }
