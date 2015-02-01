@@ -32,6 +32,7 @@ class I18nHelpersTest extends WpTestCase
 
     public function tearDown()
     {
+        parent::tearDown();
         deactivate_plugins($this->getPluginFileAbsolutePath('polylang'));
     }
 
