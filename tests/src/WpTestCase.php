@@ -34,6 +34,39 @@ abstract class WpTestCase extends \WP_UnitTestCase
     private $assetsPath = './tests/assets';
 
     /**
+     * Starts transaction only if the current test method declares that an eventual
+     * rollback should be triggered.
+     */
+    public function start_transaction()
+    {
+        if ($this->rollbackIsNeeded()) {
+            parent::start_transaction();
+        }
+    }
+
+    /**
+     * Test methods can declare if a rollback should eventually be triggered. To
+     * do so, they shall use the @needsRollback annotation (boolean value expected).
+     * This method parses the declaration for the current test method (defaults
+     * to true).
+     *
+     * @return boolean
+     */
+    protected function rollbackIsNeeded()
+    {
+        $response    = true;
+        $annotations = $this->getAnnotations();
+        if (
+            isset($annotations['method']['needsRollback']) &&
+            !filter_var($annotations['method']['needsRollback'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)
+        ) {
+            $response = false;
+        }
+
+        return $response;
+    }
+
+    /**
      * @param string
      *
      * @return string

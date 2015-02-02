@@ -52,7 +52,6 @@ class PolylangDecorator
         foreach ($languages as $language) {
             if ($this->languageIsValid($language)) {
                 $this->realSubject->model->add_language($language);
-                $this->clearInfoMessages();
             }
         }
     }
@@ -72,15 +71,5 @@ class PolylangDecorator
             isset($language['rtl']) &&
             isset($language['term_group'])
         );
-    }
-
-    protected function clearInfoMessages()
-    {
-        global $wp_settings_errors;
-        if (!is_null($wp_settings_errors)) {
-            $wp_settings_errors = array_filter($wp_settings_errors, function($element) {
-                return !(isset($element['type']) && $element['type'] == 'updated');
-            });
-        }
     }
 }

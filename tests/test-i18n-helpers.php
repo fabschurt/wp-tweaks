@@ -8,38 +8,36 @@ class I18nHelpersTest extends WpTestCase
     /**
      * @var PolylangDecorator
      */
-    private $polylang;
+    private static $polylang;
 
     /**
      * @var integer
      */
-    private $enPostId;
+    private static $enPostId;
 
     /**
      * @var integer
      */
-    private $frPostId;
+    private static $frPostId;
 
     /**
      * @var integer
      */
-    private $enTermId;
+    private static $enTermId;
 
     /**
      * @var integer
      */
-    private $frTermId;
+    private static $frTermId;
 
     public static function setUpBeforeClass()
     {
-        system('./vendor/bin/wp plugin install polylang');
-        echo "\n";
+        exec('./vendor/bin/wp plugin install polylang');
     }
 
     public static function tearDownAfterClass()
     {
-        echo "\n\n";
-        system('./vendor/bin/wp plugin uninstall polylang');
+        exec('./vendor/bin/wp plugin uninstall polylang');
     }
 
     public function tearDown()
@@ -62,18 +60,24 @@ class I18nHelpersTest extends WpTestCase
         $this->assertSame(_fswpt_get_i18n_post_id($id), $id);
     }
 
+    /**
+     * @needsRollback false
+     */
     public function testFswptGetI18nPostIdReturnsPostIdOfTranslatedPost()
     {
         $this->initPolylang();
-        $this->polylang->setCurrentLanguage('en');
-        $this->assertSame(_fswpt_get_i18n_post_id($this->frPostId), $this->enPostId);
+        static::$polylang->setCurrentLanguage('en');
+        $this->assertSame(_fswpt_get_i18n_post_id(static::$frPostId), static::$enPostId);
     }
 
+    /**
+     * @needsRollback false
+     */
     public function testFswptGetI18nTermIdReturnsTermIdOfTranslatedTerm()
     {
         $this->initPolylang();
-        $this->polylang->setCurrentLanguage('en');
-        $this->assertSame(_fswpt_get_i18n_term_id($this->frTermId), $this->enTermId);
+        static::$polylang->setCurrentLanguage('en');
+        $this->assertSame(_fswpt_get_i18n_term_id(static::$frTermId), static::$enTermId);
     }
 
     /**
@@ -84,25 +88,36 @@ class I18nHelpersTest extends WpTestCase
         if (!is_plugin_active($this->getPluginFileRelativePath('polylang'))) {
             activate_plugin($this->getPluginFileAbsolutePath('polylang'));
         }
-        global $polylang;
-        $this->polylang = new PolylangDecorator($polylang, array(
-            array(
-                'name'       => 'English',
-                'locale'     => 'en_US',
-                'slug'       => 'en',
-                'rtl'        => 0,
-                'term_group' => '',
-            ),
-            array(
-                'name'       => 'French',
-                'locale'     => 'fr_FR',
-                'slug'       => 'fr',
-                'rtl'        => 0,
-                'term_group' => '',
-            ),
-        ));
-        $this->insertTestTerms();
-        $this->insertTestPosts();
+
+        if (is_null(static::$polylang)) {
+            global $polylang;
+
+            $model_stub = $this->getMockBuilder('\PLL_Admin_Model')
+                               ->setMethods(array('validate_lang'))
+                               ->setConstructorArgs(array(&$polylang->model->options))
+                               ->getMock();
+            $model_stub->method('validate_lang')->willReturn(true);
+            $polylang->model = $model_stub;
+
+            static::$polylang = new PolylangDecorator($polylang, array(
+                array(
+                    'name'       => 'English',
+                    'locale'     => 'en_US',
+                    'slug'       => 'en',
+                    'rtl'        => 0,
+                    'term_group' => '',
+                ),
+                array(
+                    'name'       => 'French',
+                    'locale'     => 'fr_FR',
+                    'slug'       => 'fr',
+                    'rtl'        => 0,
+                    'term_group' => '',
+                ),
+            ));
+            static::insertTestTerms();
+            static::insertTestPosts();
+        }
     }
 
     /**
@@ -110,15 +125,15 @@ class I18nHelpersTest extends WpTestCase
      */
     protected function insertTestTerms()
     {
-        $en_term_info   = wp_insert_term('awesome', 'post_tag');
-        $fr_term_info   = wp_insert_term('génial', 'post_tag');
-        $this->enTermId = $en_term_info['term_id'];
-        $this->frTermId = $fr_term_info['term_id'];
-        pll_set_term_language($this->enTermId, 'en');
-        pll_set_term_language($this->frTermId, 'fr');
+        $en_term_info     = wp_insert_term('awesome', 'post_tag');
+        $fr_term_info     = wp_insert_term('génial', 'post_tag');
+        static::$enTermId = $en_term_info['term_id'];
+        static::$frTermId = $fr_term_info['term_id'];
+        pll_set_term_language(static::$enTermId, 'en');
+        pll_set_term_language(static::$frTermId, 'fr');
         pll_save_term_translations(array(
-            'en' => $this->enTermId,
-            'fr' => $this->frTermId,
+            'en' => static::$enTermId,
+            'fr' => static::$frTermId,
         ));
     }
 
@@ -127,23 +142,23 @@ class I18nHelpersTest extends WpTestCase
      */
     protected function insertTestPosts()
     {
-        $this->enPostId = wp_insert_post(array(
+        static::$enPostId = wp_insert_post(array(
             'post_title'   => 'My Awesome Post!',
             'post_content' => 'This is some awesome post. Period.',
             'post_status'  => 'publish',
             'tags_input'   => 'awesome',
         ));
-        $this->frPostId = wp_insert_post(array(
+        static::$frPostId = wp_insert_post(array(
             'post_title'   => 'Mon post de fou!',
             'post_content' => 'Ceci est un post de fou. Point.',
             'post_status'  => 'publish',
             'tags_input'   => 'génial',
         ));
-        pll_set_post_language($this->enPostId, 'en');
-        pll_set_post_language($this->frPostId, 'fr');
+        pll_set_post_language(static::$enPostId, 'en');
+        pll_set_post_language(static::$frPostId, 'fr');
         pll_save_post_translations(array(
-            'en' => $this->enPostId,
-            'fr' => $this->frPostId,
+            'en' => static::$enPostId,
+            'fr' => static::$frPostId,
         ));
     }
 }
