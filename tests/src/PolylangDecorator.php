@@ -63,27 +63,35 @@ class PolylangDecorator
     protected function insertLanguages(array $languages)
     {
         foreach ($languages as $language) {
-            if (
-                !is_array($language) ||
-                !isset($language['name']) ||
-                !isset($language['locale']) ||
-                !isset($language['slug']) ||
-                !isset($language['rtl']) ||
-                !isset($language['term_group'])
-            ) {
-                continue;
+            if ($this->languageIsValid($language)) {
+                $this->realSubject->model->add_language($language);
+                $this->clearInfoMessages();
             }
-            $this->realSubject->model->add_language($language);
-            $this->emptySettingsErrors();
         }
     }
 
     /**
-     * @return void
+     * @param array $language
+     *
+     * @return boolean
      */
-    protected function emptySettingsErrors()
+    protected function languageIsValid(array $language)
+    {
+        return (
+            is_array($language) &&
+            isset($language['name']) &&
+            isset($language['locale']) &&
+            isset($language['slug']) &&
+            isset($language['rtl']) &&
+            isset($language['term_group'])
+        );
+    }
+
+    protected function clearInfoMessages()
     {
         global $wp_settings_errors;
-        $wp_settings_errors = array();
+        $wp_settings_errors = array_filter($wp_settings_errors, function($element) {
+            return !(isset($element['type']) && $element['type'] == 'updated');
+        });
     }
 }

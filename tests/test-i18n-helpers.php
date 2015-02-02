@@ -33,7 +33,9 @@ class I18nHelpersTest extends WpTestCase
     public function tearDown()
     {
         parent::tearDown();
-        deactivate_plugins($this->getPluginFileAbsolutePath('polylang'));
+        if (is_plugin_active($this->getPluginFileRelativePath('polylang'))) {
+            deactivate_plugins($this->getPluginFileAbsolutePath('polylang'));
+        }
     }
 
     public function testFswptGetI18nPostIdReturnsArgumentIfPolylangIsNotActivated()
@@ -67,7 +69,9 @@ class I18nHelpersTest extends WpTestCase
      */
     protected function initPolylang()
     {
-        activate_plugin($this->getPluginFileAbsolutePath('polylang'));
+        if (!is_plugin_active($this->getPluginFileRelativePath('polylang'))) {
+            activate_plugin($this->getPluginFileAbsolutePath('polylang'));
+        }
         global $polylang;
         $this->polylang = new PolylangDecorator($polylang, array(
             array(
