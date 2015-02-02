@@ -77,8 +77,10 @@ class PolylangDecorator
     protected function clearInfoMessages()
     {
         global $wp_settings_errors;
-        $wp_settings_errors = array_filter($wp_settings_errors, function($element) {
-            return !(isset($element['type']) && $element['type'] == 'updated');
-        });
+        if (!is_null($wp_settings_errors)) {
+            $wp_settings_errors = array_filter($wp_settings_errors, function($element) {
+                return !(isset($element['type']) && $element['type'] == 'updated');
+            });
+        }
     }
 }
