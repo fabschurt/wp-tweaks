@@ -14,9 +14,6 @@ WP_VERSION=${5-latest}
 WP_TESTS_DIR=${WP_TESTS_DIR-/tmp/wordpress-tests-lib}
 WP_CORE_DIR=/tmp/wordpress
 
-PLUGINS_DIR=/tmp/wp-plugins
-PLUGINS_TO_INSTALL=( polylang )
-
 set -ex
 
 install_wp()
@@ -33,19 +30,6 @@ install_wp()
     tar --strip-components=1 -zxmf /tmp/wordpress.tar.gz -C $WP_CORE_DIR
 
     wget -nv -O $WP_CORE_DIR/wp-content/db.php https://raw.github.com/markoheijnen/wp-mysqli/master/db.php
-}
-
-install_plugins()
-{
-    mkdir -p $PLUGINS_DIR
-
-    for i in "${PLUGINS_TO_INSTALL[@]}"; do
-        wget -nv -O $PLUGINS_DIR/polylang.1.6.2.zip https://downloads.wordpress.org/plugin/polylang.1.6.2.zip
-    done
-
-    for file in $PLUGINS_DIR/*.zip; do
-        unzip -q $file -d $WP_CORE_DIR/wp-content/plugins
-    done
 }
 
 install_test_suite()
@@ -98,6 +82,5 @@ install_db()
 }
 
 install_wp
-install_plugins
 install_test_suite
 install_db
