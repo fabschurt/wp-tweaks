@@ -43,19 +43,6 @@ class PolylangDecorator
     }
 
     /**
-     * Provides delegation to real subject for unknown class methods.
-     *
-     * @param string $method_name
-     * @param array  $arguments
-     *
-     * @return mixed
-     */
-    public static function __callStatic($method_name, $arguments)
-    {
-        call_user_func_array(sprintf('%s::%s', get_class($this->realSubject), $method_name), $arguments);
-    }
-
-    /**
      * @param array $languages
      *
      * @return void
