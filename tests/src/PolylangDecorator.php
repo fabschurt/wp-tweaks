@@ -39,7 +39,7 @@ class PolylangDecorator
      */
     public function __call($method_name, $arguments)
     {
-        call_user_func_array(array($method_name, $this->realSubject), $arguments);
+        call_user_func_array(array($this->realSubject, $method_name), $arguments);
     }
 
     /**
