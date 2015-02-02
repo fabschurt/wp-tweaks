@@ -194,4 +194,14 @@ abstract class WpTestCase extends \WP_UnitTestCase
     {
         return sprintf('%1$swp-content/plugins/%2$s/%2$s.php', ABSPATH, $plugin_name);
     }
+
+    /**
+     * @param string
+     *
+     * @return string
+     */
+    protected function getPluginFileRelativePath($plugin_name)
+    {
+        return sprintf('%1$s/%1$s.php', $plugin_name);
+    }
 }
