@@ -30,6 +30,18 @@ class I18nHelpersTest extends WpTestCase
      */
     private $frTermId;
 
+    public static function setUpBeforeClass()
+    {
+        system('./vendor/bin/wp plugin install polylang');
+        echo "\n";
+    }
+
+    public static function tearDownAfterClass()
+    {
+        echo "\n\n";
+        system('./vendor/bin/wp plugin uninstall polylang');
+    }
+
     public function tearDown()
     {
         parent::tearDown();
