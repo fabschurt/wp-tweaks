@@ -80,9 +80,6 @@ class I18nHelpersTest extends WpTestCase
         $this->assertSame(_fswpt_get_i18n_term_id(static::$frTermId), static::$enTermId);
     }
 
-    /**
-     * @return void
-     */
     protected function initPolylang()
     {
         if (!is_plugin_active($this->getPluginFileRelativePath('polylang'))) {
@@ -120,9 +117,6 @@ class I18nHelpersTest extends WpTestCase
         }
     }
 
-    /**
-     * @return void
-     */
     protected function insertTestTerms()
     {
         $en_term_info     = wp_insert_term('awesome', 'post_tag');
@@ -137,9 +131,6 @@ class I18nHelpersTest extends WpTestCase
         ));
     }
 
-    /**
-     * @return void
-     */
     protected function insertTestPosts()
     {
         static::$enPostId = wp_insert_post(array(

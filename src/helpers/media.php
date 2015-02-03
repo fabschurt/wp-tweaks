@@ -132,8 +132,6 @@ function _fswpt_insert_attachment($file_path, $parent_post_id = 0, $fallback_tit
  * @throws InvalidArgumentException If $zip_file_path is not a ZIP (.zip) file
  * @throws RuntimeException         If a temp dir cannot be created for file extraction
  * @throws RuntimeException         If an error occurs while unzipping the archive
- *
- * @return void
  */
 function _fswpt_insert_attachments_from_zip(WP_Filesystem_Base $filesystem, $zip_file_path, $parent_post_id = 0)
 {

@@ -21,8 +21,6 @@ class PolylangDecorator
 
     /**
      * @param string $language_code
-     *
-     * @return void
      */
     public function setCurrentLanguage($language_code)
     {
@@ -44,8 +42,6 @@ class PolylangDecorator
 
     /**
      * @param array $languages
-     *
-     * @return void
      */
     protected function insertLanguages(array $languages)
     {

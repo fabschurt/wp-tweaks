@@ -203,9 +203,6 @@ abstract class WpTestCase extends \WP_UnitTestCase
         return $container;
     }
 
-    /**
-     * @return void
-     */
     protected function setTestTheme()
     {
         add_filter('stylesheet', function() {
