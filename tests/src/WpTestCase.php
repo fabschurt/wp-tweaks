@@ -34,6 +34,59 @@ abstract class WpTestCase extends \WP_UnitTestCase
     private $assetsPath = './tests/assets';
 
     /**
+     * Starts transaction only if the current test method declares that an eventual
+     * rollback should be triggered.
+     */
+    public function start_transaction()
+    {
+        if ($this->rollbackIsNeeded()) {
+            parent::start_transaction();
+        }
+    }
+
+    /**
+     * Test methods can declare if a rollback should eventually be triggered. To
+     * do so, they shall use the @needsRollback annotation (boolean value expected).
+     * This method parses the declaration for the current test method (defaults
+     * to true).
+     *
+     * @return boolean
+     */
+    protected function rollbackIsNeeded()
+    {
+        $response    = true;
+        $annotations = $this->getAnnotations();
+        if (
+            isset($annotations['method']['needsRollback']) &&
+            !filter_var($annotations['method']['needsRollback'], FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE)
+        ) {
+            $response = false;
+        }
+
+        return $response;
+    }
+
+    /**
+     * @param string
+     *
+     * @return string
+     */
+    protected function getPluginFileAbsolutePath($plugin_name)
+    {
+        return sprintf('%1$swp-content/plugins/%2$s/%2$s.php', ABSPATH, $plugin_name);
+    }
+
+    /**
+     * @param string
+     *
+     * @return string
+     */
+    protected function getPluginFileRelativePath($plugin_name)
+    {
+        return sprintf('%1$s/%1$s.php', $plugin_name);
+    }
+
+    /**
      * @return vfsStreamDirectory
      */
     protected function getMockFilesystemRoot()
@@ -45,6 +98,9 @@ abstract class WpTestCase extends \WP_UnitTestCase
         return $this->mockFsRoot;
     }
 
+    /**
+     * @return vfsStreamDirectory
+     */
     protected function getMockTempDir()
     {
         if (is_null($this->mockTempDir)) {
@@ -101,6 +157,25 @@ abstract class WpTestCase extends \WP_UnitTestCase
         }
 
         return $wp_filesystem;
+    }
+
+    /**
+     * @return boolean|void
+     */
+    protected function deleteAllUploads()
+    {
+        $upload_dir_info = wp_upload_dir();
+        if (empty($upload_dir_info['basedir'])) {
+            throw new RuntimeException('wp_upload_dir() failed to return required information.');
+        }
+
+        $upload_dir = $upload_dir_info['basedir'];
+        $uploads = array_filter(scandir($upload_dir), function($element) {
+            return ($element !== '.' && $element !== '..');
+        });
+        foreach ($uploads as $upload) {
+            $this->getWpFilesystem()->delete("{$upload_dir}/{$upload}", true);
+        }
     }
 
     /**
@@ -161,24 +236,5 @@ abstract class WpTestCase extends \WP_UnitTestCase
         ));
 
         return (count($attachments) == 1 ? $attachments[0] : $attachments);
-    }
-
-    /**
-     * @return void
-     */
-    protected function deleteAllUploads()
-    {
-        $upload_dir_info = wp_upload_dir();
-        if (empty($upload_dir_info['basedir'])) {
-            throw new RuntimeException('wp_upload_dir() failed to return required information.');
-        }
-
-        $upload_dir = $upload_dir_info['basedir'];
-        $uploads    = array_filter(scandir($upload_dir), function($element) {
-            return ($element !== '.' && $element !== '..');
-        });
-        foreach ($uploads as $upload) {
-            $this->getWpFilesystem()->delete("{$upload_dir}/{$upload}", true);
-        }
     }
 }

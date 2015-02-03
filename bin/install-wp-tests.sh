@@ -12,7 +12,7 @@ DB_HOST=${4-localhost}
 WP_VERSION=${5-latest}
 
 WP_TESTS_DIR=${WP_TESTS_DIR-/tmp/wordpress-tests-lib}
-WP_CORE_DIR=/tmp/wordpress/
+WP_CORE_DIR=/tmp/wordpress
 
 set -ex
 
@@ -47,11 +47,16 @@ install_test_suite()
     svn co --quiet http://develop.svn.wordpress.org/trunk/tests/phpunit/includes/
 
     wget -nv -O wp-tests-config.php http://develop.svn.wordpress.org/trunk/wp-tests-config-sample.php
-    sed $ioption "s:dirname( __FILE__ ) . '/src/':'$WP_CORE_DIR':" wp-tests-config.php
+    sed $ioption "s:dirname( __FILE__ ) . '/src/':'$WP_CORE_DIR/':" wp-tests-config.php
     sed $ioption "s/youremptytestdbnamehere/$DB_NAME/" wp-tests-config.php
     sed $ioption "s/yourusernamehere/$DB_USER/" wp-tests-config.php
     sed $ioption "s/yourpasswordhere/$DB_PASS/" wp-tests-config.php
     sed $ioption "s|localhost|${DB_HOST}|" wp-tests-config.php
+
+    wp_config_file_path='../wordpress/wp-config.php'
+    touch "$wp_config_file_path"
+    grep --color='never' -E "^(define\(\s+'DB_|\\\$table_prefix\s+=).*" wp-tests-config.php >> "$wp_config_file_path"
+    echo "require_once(ABSPATH . 'wp-settings.php');" >> "$wp_config_file_path"
 }
 
 install_db()

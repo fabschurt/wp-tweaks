@@ -21,7 +21,7 @@ class AssetsHelpersTest extends WpTestCase
         $last_attachment = $this->getLastAttachmentRows();
         $this->assertSame(
             _fswpt_get_image_src($last_attachment->ID, 'test'),
-            'http://example.org/wp-content/uploads/2014/12/image-with-no-iptc-tag-32x32.jpg'
+            sprintf('http://example.org/wp-content/uploads/%s/%s/image-with-no-iptc-tag-32x32.jpg', date('Y'), date('m'))
         );
     }
 }
