@@ -20,8 +20,8 @@ in WP core and plugins.
 
 ## @todo
 
-- [ ] Write tests for `helpers/posts.php` and `helpers/taxonomies.php`
-- [ ] Complete DocBlocks writing
+- [ ] Finish to write unit tests
+- [ ] Finish to write DocBlocks
 
 ## License
 
