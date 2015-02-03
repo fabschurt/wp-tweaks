@@ -175,3 +175,21 @@ function _fswpt_insert_attachments_from_zip(WP_Filesystem_Base $filesystem, $zip
     // Clean the mess up
     $filesystem->rmdir($tmp_dir_path, true);
 }
+
+/**
+ * Tries to fetch the created date from an attachement's metadata.
+ *
+ * @param integer $attachment_id
+ *
+ * @return integer|boolean The timestamp on success, false on failure or metadata not found
+ */
+function _fswpt_get_attachment_created_date($attachment_id)
+{
+    $timestamp       = false;
+    $attachment_meta = wp_get_attachment_metadata($attachment_id);
+    if ($attachment_meta && !empty($attachment_meta['image_meta']['created_timestamp'])) {
+        $timestamp = intval($attachment_meta['image_meta']['created_timestamp']);
+    }
+
+    return $timestamp;
+}
