@@ -11,7 +11,7 @@
  * @throws InvalidArgumentException If $file_path does not exist or is not readable
  * @throws InvalidArgumentException If $file_path is not an image with IPTC tags support (i.e. JPEG or TIFF)
  *
- * @return array|string|boolean A string value or an array of string values, or false on failure
+ * @return string[]|string|boolean A string value or an array of string values, or false on failure
  */
 function _fswpt_get_iptc_tag_from_file($file_path, $iptc_tag, $multiple_values = false)
 {

@@ -11,7 +11,7 @@ class PolylangDecorator
 
     /**
      * @param \Polylang $polylang_object
-     * @param array     $languages
+     * @param array[]   $languages
      */
     public function __construct($polylang_object, array $languages)
     {
@@ -41,7 +41,7 @@ class PolylangDecorator
     }
 
     /**
-     * @param array $languages
+     * @param array[] $languages
      */
     protected function insertLanguages(array $languages)
     {

@@ -14,7 +14,7 @@ function _fswpt_is_revamped_wordpress_ui()
  * Returns the IDs of all the blogs in the network, or the current blog ID if
  * multisite is not enabled.
  *
- * @return array
+ * @return integer[]
  */
 function _fswpt_get_network_blog_ids()
 {

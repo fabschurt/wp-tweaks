@@ -28,9 +28,9 @@ function _fswpt_get_posts_per_ids($post_type, array $post_ids, $as_array = false
  * Extracts previous/next posts' URLs from `get_previous_posts_link()` and
  * `get_next_posts_link()` return values.
  *
- * @param array $base_urls
+ * @param string[] $base_urls
  *
- * @return array
+ * @return string[]
  */
 function _fswpt_extract_nav_urls(array $base_urls)
 {
