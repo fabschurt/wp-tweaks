@@ -23,3 +23,32 @@ function _fswpt_get_posts_per_ids($post_type, array $post_ids, $as_array = false
 
     return $list;
 }
+
+/**
+ * Extracts previous/next posts' URLs from `get_previous_posts_link()` and
+ * `get_next_posts_link()` return values.
+ *
+ * @param array $base_urls
+ *
+ * @return array
+ */
+function _fswpt_extract_nav_urls(array $base_urls)
+{
+    $regex          = '/href="(.+?)"/';
+    $extracted_urls = array();
+
+    if (isset($base_urls['next_posts_link'])) {
+        preg_match($regex, $base_urls['next_posts_link'], $matches);
+        if (!empty($matches[1])) {
+            $extracted_urls['next_posts_url'] = $matches[1];
+        }
+    }
+    if (isset($base_urls['previous_posts_link'])) {
+        preg_match($regex, $base_urls['previous_posts_link'], $matches);
+        if (!empty($matches[1])) {
+            $extracted_urls['previous_posts_url'] = $matches[1];
+        }
+    }
+
+    return $extracted_urls;
+}
