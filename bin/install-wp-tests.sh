@@ -18,6 +18,9 @@ set -ex
 
 install_wp()
 {
+    if [ -d $WP_CORE_DIR ]; then
+        rm -r $WP_CORE_DIR
+    fi
     mkdir -p $WP_CORE_DIR
 
     if [ $WP_VERSION == 'latest' ]; then
@@ -42,6 +45,9 @@ install_test_suite()
     fi
 
     # set up testing suite
+    if [ -d $WP_TESTS_DIR ]; then
+        rm -r $WP_TESTS_DIR
+    fi
     mkdir -p $WP_TESTS_DIR
     cd $WP_TESTS_DIR
     svn co --quiet http://develop.svn.wordpress.org/trunk/tests/phpunit/includes/
@@ -54,9 +60,9 @@ install_test_suite()
     sed $ioption "s|localhost|${DB_HOST}|" wp-tests-config.php
 
     wp_config_file_path='../wordpress/wp-config.php'
-    touch "$wp_config_file_path"
-    grep --color='never' -E "^(define\(\s+'DB_|\\\$table_prefix\s+=).*" wp-tests-config.php >> "$wp_config_file_path"
-    echo "require_once(ABSPATH . 'wp-settings.php');" >> "$wp_config_file_path"
+    touch $wp_config_file_path
+    grep --color='never' -E "^(define\(\s+'DB_|\\\$table_prefix\s+=).*" wp-tests-config.php >> $wp_config_file_path
+    echo "require_once(ABSPATH . 'wp-settings.php');" >> $wp_config_file_path
 }
 
 install_db()
