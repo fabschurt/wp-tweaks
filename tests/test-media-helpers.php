@@ -199,14 +199,15 @@ class MediaHelpersTest extends WpTestCase
 
     public function testZipInsertionAcceptsCustomParentId()
     {
+        $id = 9001;
         _fswpt_insert_attachments_from_zip(
             $this->getWpFilesystem(),
             "{$this->getAssetsPath()}/zip-file.zip",
-            9001
+            $id
         );
         $this->assertSame(
             $this->extractFieldValuesFromPostsArray('post_parent', $this->getLastAttachmentRows(3), 'intval'),
-            array(9001, 9001, 9001)
+            array($id, $id, $id)
         );
     }
 
