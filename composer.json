@@ -20,12 +20,12 @@
     "prefer-stable": true,
     "require": {
         "php": ">=5.3",
-        "composer/installers": "~1.0"
+        "composer/installers": "~1.0.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "~4.4",
-        "wp-cli/wp-cli": "~0.17",
-        "mikey179/vfsStream": "~1.4"
+        "phpunit/phpunit": "~4.0",
+        "wp-cli/wp-cli": "~0.1",
+        "mikey179/vfsStream": "~1.4.0"
     },
     "autoload": {
         "psr-4": {
