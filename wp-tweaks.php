@@ -43,52 +43,6 @@ foreach (glob(__DIR__.'/src/helpers/*.php', GLOB_ERR) as $helper_file) {
     require_once $helper_file;
 }
 
-// Enforce locale to match current Polylang language
-if (is_plugin_active('polylang/polylang.php')) {
-    setlocale(LC_ALL, pll_current_language('locale'));
-}
-
-// Clean HTML <head> up a bit
-remove_action('wp_head', 'adjacent_posts_rel_link_wp_head');
-
-// Remove the «Private» label from the beginning of private posts' titles
-add_filter('private_title_format', function($title) {
-    return '%s';
-});
-
-// Hide frontend admin bar from regular users
-add_filter('show_admin_bar', function($show_admin_bar) {
-    return current_user_can('manage_options');
-});
-
-// Ensure that some sensitive admin menus are hidden from regular users
-add_action('admin_menu', function() {
-    if (!current_user_can('manage_options')) {
-        remove_menu_page('wpfront-user-role-editor-all-roles');
-        remove_menu_page('tools.php');
-        remove_menu_page('options-general.php');
-    }
-});
-
-// In user list, hide super admin users from all but themselves
-add_action('pre_user_query', function() {
-    if (current_user_can('manage_options')) {
-        return;
-    }
-
-    global $wpdb;
-    $user_search->query_where = str_replace(
-        'WHERE 1=1',
-        "WHERE 1=1 AND {$wpdb->users}.ID != 1",
-        $user_search->query_where
-    );
-});
-
-// In development, send all outbound e-mails from and to the blog's e-mail address
-add_filter('wp_mail', function(array $params) {
-    if (defined('WP_ENV') && WP_ENV === 'development') {
-        $params['from'] = $params['to'] = get_bloginfo('admin_email');
-    }
-
-    return $params;
-});
+// Include actions and filters
+require_once __DIR__.'/src/actions.php';
+require_once __DIR__.'/src/filters.php';
