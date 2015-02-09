@@ -3,14 +3,19 @@
 /**
  * Returns the absolute URL of a theme asset.
  *
- * @param string  $relative_url
+ * @param string  $relative_url If the URL starts with `@bower/`, the prefix will be the value of
+ *                              $GLOBALS['bower_components_root_url'] if it exists
  * @param boolean $escape
  *
  * @return string
  */
 function _fswpt_get_asset($relative_url, $escape = true)
 {
-    $url = get_stylesheet_directory_uri()."/{$relative_url}";
+    if (isset($GLOBALS['bower_components_root_url']) && substr($relative_url, 0, 7) === '@bower/') {
+        $url = $GLOBALS['bower_components_root_url'].'/'.substr($relative_url, 7);
+    } else {
+        $url = get_stylesheet_directory_uri()."/{$relative_url}";
+    }
     if ($escape) {
         $url = esc_url($url);
     }
