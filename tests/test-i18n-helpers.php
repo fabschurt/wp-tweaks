@@ -48,13 +48,13 @@ class I18nHelpersTest extends WpTestCase
         }
     }
 
-    public function testFswptGetI18nPostIdReturnsArgumentIfPolylangIsNotActivated()
+    public function testGetI18nPostIdReturnsArgumentIfPolylangIsNotActivated()
     {
         $id = 9001;
         $this->assertSame(_fswpt_get_i18n_post_id($id), $id);
     }
 
-    public function testFswptGetI18nTermIdReturnsArgumentIfPolylangIsNotActivated()
+    public function testGetI18nTermIdReturnsArgumentIfPolylangIsNotActivated()
     {
         $id = 9001;
         $this->assertSame(_fswpt_get_i18n_post_id($id), $id);
@@ -63,7 +63,7 @@ class I18nHelpersTest extends WpTestCase
     /**
      * @needsRollback false
      */
-    public function testFswptGetI18nPostIdReturnsPostIdOfTranslatedPost()
+    public function testGetI18nPostIdReturnsPostIdOfTranslatedPost()
     {
         $this->initPolylang();
         static::$polylang->setCurrentLanguage('en');
@@ -73,7 +73,7 @@ class I18nHelpersTest extends WpTestCase
     /**
      * @needsRollback false
      */
-    public function testFswptGetI18nTermIdReturnsTermIdOfTranslatedTerm()
+    public function testGetI18nTermIdReturnsTermIdOfTranslatedTerm()
     {
         $this->initPolylang();
         static::$polylang->setCurrentLanguage('en');
