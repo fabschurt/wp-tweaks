@@ -11,10 +11,15 @@ add_filter('show_admin_bar', function($show_admin_bar) {
 });
 
 // In development, send all outbound e-mails from and to the blog's e-mail address
-add_filter('wp_mail', function(array $params) {
-    if (defined('WP_ENV') && WP_ENV === 'development') {
-        $params['from'] = $params['to'] = get_bloginfo('admin_email');
-    }
+if (defined('WP_ENV') && WP_ENV === 'development') {
+    $new_addr = get_bloginfo('admin_email');
 
-    return $params;
-});
+    add_filter('wp_mail', function(array $params) use ($new_addr) {
+        $params['to'] = $new_addr;
+
+        return $params;
+    });
+    add_filter('wp_mail_from', function($to_addr) use ($new_addr) {
+        return $new_addr;
+    });
+}
