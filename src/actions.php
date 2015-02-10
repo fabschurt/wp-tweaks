@@ -30,3 +30,18 @@ add_action('pre_user_query', function() {
         $user_search->query_where
     );
 });
+
+// Load language file overrides if needed
+add_action('load_textdomain', function($domain, $mo_file_path) {
+    global $language_domains_to_override;
+    if (!$language_domains_to_override) {
+        return;
+    }
+
+    $override_path = WP_LANG_DIR.sprintf('/%1$s/%1$s-%2$s.mo',
+                                         $domain,
+                                         apply_filters('plugin_locale', get_locale(), $domain));
+    if (in_array($domain, $language_domains_to_override, true) && $mo_file_path !== $override_path) {
+        load_textdomain($domain, $override_path);
+    }
+}, 10, 2);
