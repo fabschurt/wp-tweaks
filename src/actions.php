@@ -17,7 +17,7 @@ add_action('admin_menu', function() {
 });
 
 // In user list, hide super admin users from all but themselves
-add_action('pre_user_query', function() {
+add_action('pre_user_query', function($user_search) {
     if (current_user_can('manage_options')) {
         return;
     }
