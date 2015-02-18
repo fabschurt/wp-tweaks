@@ -11,8 +11,10 @@
  */
 function _fswpt_get_asset($relative_url, $escape = true)
 {
-    if (isset($GLOBALS['bower_components_root_url']) && substr($relative_url, 0, 7) === '@bower/') {
-        $url = $GLOBALS['bower_components_root_url'].'/'.substr($relative_url, 7);
+    global $bower_components_root_url;
+
+    if ($bower_components_root_url && substr($relative_url, 0, 7) === '@bower/') {
+        $url = "{$bower_components_root_url}/".substr($relative_url, 7);
     } else {
         $url = get_stylesheet_directory_uri()."/{$relative_url}";
     }
