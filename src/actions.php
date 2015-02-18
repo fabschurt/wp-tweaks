@@ -11,7 +11,6 @@ remove_action('wp_head', 'adjacent_posts_rel_link_wp_head');
 // Ensure that some sensitive admin menus are hidden from regular users
 add_action('admin_menu', function() {
     if (!current_user_can('manage_options')) {
-        remove_menu_page('wpfront-user-role-editor-all-roles');
         remove_menu_page('tools.php');
         remove_menu_page('options-general.php');
     }
