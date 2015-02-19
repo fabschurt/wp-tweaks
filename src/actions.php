@@ -44,3 +44,26 @@ add_action('load_textdomain', function($domain, $mo_file_path) {
         load_textdomain($domain, $override_path);
     }
 }, 10, 2);
+
+// Disable admin UI customization for unauthorized users
+add_action('admin_init', function() {
+    if (!current_user_can('manage_options') && !isset($_COOKIE['wp_allow_admin_ui_customization'])) {
+        add_action('admin_init', function() {
+            wp_deregister_script('postbox');
+        });
+        add_action('admin_head', function() {
+            echo <<<STYLE
+                <style>
+                    #screen-options-link-wrap,
+                    .postbox > .handlediv {
+                        display: none !important;
+                    }
+
+                    .postbox > .hndle {
+                        cursor: auto !important;
+                    }
+                </style>
+STYLE;
+        });
+    }
+});
