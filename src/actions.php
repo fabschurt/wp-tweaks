@@ -51,19 +51,17 @@ add_action('init', function() {
         add_action('admin_init', function() {
             wp_deregister_script('postbox');
         });
-        add_action('admin_head', function() {
-            echo <<<STYLE
-                <style>
-                    #screen-options-link-wrap,
-                    .postbox > .handlediv {
-                        display: none !important;
-                    }
+        add_action('admin_head', function() { ?>
+            <style>
+                #screen-options-link-wrap,
+                .postbox > .handlediv {
+                    display: none !important;
+                }
 
-                    .postbox > .hndle {
-                        cursor: auto !important;
-                    }
-                </style>
-STYLE;
-        });
+                .postbox > .hndle {
+                    cursor: auto !important;
+                }
+            </style>
+        <?php });
     }
 });
