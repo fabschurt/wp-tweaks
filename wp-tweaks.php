@@ -33,16 +33,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-// Load dependencies
-if (!function_exists('is_plugin_active')) {
-    require_once ABSPATH.'wp-admin/includes/plugin.php';
-}
-
-// Include helpers
-foreach (glob(__DIR__.'/src/helpers/*.php', GLOB_ERR) as $helper_file) {
+// Include all the files
+foreach (glob(__DIR__.'/src/*.php', GLOB_ERR) as $helper_file) {
     require_once $helper_file;
 }
-
-// Include actions and filters
-require_once __DIR__.'/src/actions.php';
-require_once __DIR__.'/src/filters.php';
