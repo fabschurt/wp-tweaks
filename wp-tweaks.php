@@ -12,7 +12,7 @@ License URI: http://opensource.org/licenses/MIT
 
 The MIT License (MIT)
 
-Copyright (c) Fabien Schurter
+Copyright (c) 2014-2015 Fabien Schurter <dev@fabschurt.net>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
