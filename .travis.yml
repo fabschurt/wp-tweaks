@@ -1,15 +1,26 @@
 language: php
 
 php:
-    - 5.3
-    - 5.4
-    - 5.5
+  - 5.4
+  - 5.5
+  - 5.6
 
 env:
-    - WP_VERSION=latest WP_MULTISITE=0
-    - WP_VERSION=latest WP_MULTISITE=1
+  global:
+    - secure: 'qCzgZaLAIbKLs4A7Fqrf4CCGognjE95AIxafbB0PXaEjroctgLR2WlHtdbp6RV5AJ14LYtP4e7fKNV3HpZwd6jggx6pn7FQWVH5T1G2psk8PYBDnmda+bfXurUwXukyO2K2YJxfNtB7EemtXqHf69ahsK2Tjn2TO5OmkQSUfbSQ='
+  matrix:
+    - WP_VERSION=3.5.2 WP_MULTISITE=0
+    - WP_VERSION=3.5.2 WP_MULTISITE=1
+    - WP_VERSION=3.8.5 WP_MULTISITE=0
+    - WP_VERSION=3.8.5 WP_MULTISITE=1
+    - WP_VERSION=4.1.1 WP_MULTISITE=0
+    - WP_VERSION=4.1.1 WP_MULTISITE=1
 
-before_script:
-    - bash bin/install-wp-tests.sh wordpress_test wordpress_test yep 127.0.0.1 $WP_VERSION
+matrix:
+  fast_finish: true
 
-script: phpunit
+install:
+  - composer self-update
+  - composer config -g github-oauth.github.com $COMPOSER_GITHUB_OAUTH
+  - composer install --prefer-dist
+  - ./vendor/bin/install-wp-test-platform wordpress_test root '' 127.0.0.1 $WP_VERSION
