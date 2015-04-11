@@ -2,6 +2,7 @@
     "name": "fabschurt/wp-tweaks",
     "type": "wordpress-muplugin",
     "description": "Some useful WordPress tweaks.",
+    "keywords": ["wordpress", "plugin", "tweaks", "admin", "actions", "filters"],
     "authors": [
         {
             "name": "Fabien Schurter",
@@ -19,8 +20,8 @@
     },
     "prefer-stable": true,
     "require": {
-        "php": ">=5.3",
-        "composer/installers": "~1.0.19"
+        "php": ">=5.4",
+        "composer/installers": "~1.0.0"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.4",
