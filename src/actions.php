@@ -13,6 +13,11 @@
  * @copyright 2014-2015 Fabien Schurter
  */
 
+// Load dependencies
+if (!function_exists('is_plugin_active')) {
+    require_once ABSPATH.'wp-admin/includes/plugin.php';
+}
+
 // Enforce locale to match current Polylang language
 if (is_plugin_active('polylang/polylang.php')) {
     setlocale(LC_ALL, pll_current_language('locale'));
