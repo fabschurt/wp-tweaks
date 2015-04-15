@@ -19,7 +19,7 @@ add_filter('private_title_format', function($title) {
 });
 
 // Hide frontend admin bar from regular users
-add_filter('show_admin_bar', function($show_admin_bar) {
+add_filter('show_admin_bar', function($showAdminBar) {
     return current_user_can('manage_options');
 });
 
@@ -31,10 +31,10 @@ add_filter('wp_mail', function(array $params) {
 
     return $params;
 });
-add_filter('wp_mail_from', function($to_addr) {
+add_filter('wp_mail_from', function($toAddr) {
     if (defined('WP_ENV') && WP_ENV === 'development') {
         return get_bloginfo('admin_email');
     }
 
-    return $to_addr;
+    return $toAddr;
 });

@@ -34,6 +34,6 @@ THE SOFTWARE.
 */
 
 // Include all the files
-foreach (glob(__DIR__.'/src/*.php', GLOB_ERR) as $helper_file) {
-    require_once $helper_file;
+foreach (glob(__DIR__.'/src/*.php', GLOB_ERR) as $helperFile) {
+    require_once $helperFile;
 }
