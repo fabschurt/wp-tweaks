@@ -50,9 +50,12 @@ add_action('load_textdomain', function($domain, $mo_file_path) {
         return;
     }
 
-    $override_path = WP_LANG_DIR.sprintf('/%1$s/%1$s-%2$s.mo',
-                                         $domain,
-                                         apply_filters('plugin_locale', get_locale(), $domain));
+    $override_path = sprintf(
+        '%1$s/%2$s/%2$s-%3$s.mo',
+        WP_LANG_DIR,
+        $domain,
+        apply_filters('plugin_locale', get_locale(), $domain)
+    );
     if (in_array($domain, $language_domains_to_override, true) && $mo_file_path !== $override_path) {
         load_textdomain($domain, $override_path);
     }
