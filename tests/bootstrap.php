@@ -10,7 +10,7 @@ if (!$testsDir) {
 require_once "{$testsDir}/includes/functions.php";
 
 tests_add_filter('plugins_loaded', function() {
-    // Require main plugin files here
+    require_once __DIR__.'/../wp-tweaks.php';
 });
 tests_add_filter('muplugins_loaded', function() {
     // Require main mu-plugin files here
