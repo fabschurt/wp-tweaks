@@ -22,5 +22,15 @@
     "require": {
         "php": ">=5.4",
         "composer/installers": "~1.0.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.4",
+        "wp-cli/wp-cli": "~0.17",
+        "fabschurt/wp-unit": "~1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "FabSchurt\\WpTweaks\\Tests\\": "tests/"
+        }
     }
 }
