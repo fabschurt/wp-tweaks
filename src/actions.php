@@ -48,7 +48,8 @@ add_action('pre_user_query', function($userSearch) {
     );
 });
 
-// Load language file overrides if needed
+// Load custom language file overrides if needed
+// Example path with default directories: /wp-content/languages/{plugin-name}/{plugin-name}-{locale}.mo)
 add_action('load_textdomain', function($domain, $moFilePath) {
     global $language_domains_to_override;
     if (!$language_domains_to_override) {
