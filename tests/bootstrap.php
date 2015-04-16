@@ -2,10 +2,7 @@
 
 require_once __DIR__.'/../vendor/autoload.php';
 
-$testsDir = getenv('WP_TESTS_DIR');
-if (!$testsDir) {
-    $testsDir = '/tmp/wordpress-tests-lib';
-}
+$testsDir = '/tmp/wordpress-tests-lib';
 
 require_once "{$testsDir}/includes/functions.php";
 
