@@ -39,8 +39,9 @@ set -x
 # Reset the test database
 php -r "require_once './vendor/autoload.php'; require_once '/tmp/wordpress-tests-lib/includes/bootstrap.php';"
 
-# Insert test users
-$wp_cli_path user create john_locke john.locke@box-factory.void --user_pass=password --role=editor
+# Insert test data
+test_user_id=$($wp_cli_path user create john_locke john.locke@box-factory.void --user_pass=password --role=editor --porcelain)
+test_post_id=$($wp_cli_path post create --post_title="Don't tell me what I can't do" --post_content='4 8 15 16 23 42' --post_author=${test_user_id} --post_status='publish' --porcelain)
 
 # Clean exit
 exit 0
