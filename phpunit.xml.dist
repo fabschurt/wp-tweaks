@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/4.4/phpunit.xsd"
-         bootstrap="tests/bootstrap.php"
+         bootstrap="tests/unit/bootstrap.php"
          backupGlobals="false"
          strict="true"
          colors="true">
     <testsuites>
         <testsuite>
-            <directory>tests</directory>
+            <directory>tests/unit</directory>
         </testsuite>
     </testsuites>
 </phpunit>
