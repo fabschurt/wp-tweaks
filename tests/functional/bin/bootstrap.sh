@@ -13,19 +13,28 @@
 # @copyright 2014-2015 Fabien Schurter
 #
 
+# Stop execution on first error
+set -e
+
 # Initial and final blank lines
 echo
 trap 'echo' EXIT
 
-# Check that WP-CLI is installed and get its path
-wp_cli_path="$(dirname ${0})/../../../vendor/bin/wp"
-if [[ ! -f $wp_cli_path ]]; then
-  echo 'Missing wp-cli executable; make sure you are in the project root, and that you have run `composer install`.'
+# Check that the working directory is the root of the project
+if [[ ! -f './composer.json' ]]; then
+  echo 'No `composer.json` file found. You must `cd` into the root of your project before running this script.'
   exit 1
 fi
 
-# Echo everything to STDOUT and stop execution on first error
-set -ex
+# Check that WP-CLI is installed
+wp_cli_path='./vendor/bin/wp'
+if [[ ! -f $wp_cli_path ]]; then
+  echo 'Missing `wp-cli` executable. Have you run `composer install` yet?'
+  exit 1
+fi
+
+# Echo everything to STDOUT
+set -x
 
 # Reset the test database
 php -r "require_once './vendor/autoload.php'; require_once '/tmp/wordpress-tests-lib/includes/bootstrap.php';"

@@ -16,9 +16,13 @@
 # Stop execution on first error
 set -e
 
-# Get directory of this script
-current_dir=$(dirname ${0})
+# Check that the working directory is the root of the project
+if [[ ! -f './composer.json' ]]; then
+  echo 'No `composer.json` file found. You must `cd` into the root of your project before running this script.'
+  exit 1
+fi
 
 # Run
-$current_dir/bootstrap.sh
-casperjs test --includes="${current_dir}/../common.js.inc" $current_dir/..
+tests_dir='./tests/functional'
+${tests_dir}/bootstrap.sh
+casperjs test $tests_dir
