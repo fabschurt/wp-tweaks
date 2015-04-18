@@ -1,5 +1,5 @@
-casper.start();
+var siteUrl = 'http://example.org';
 
-casper.test.setUp(function globalSetUp(test) {
-    casper.page.clearCookies();
+casper.test.setUp(function globalSetUp() {
+    phantom.clearCookies();
 });
