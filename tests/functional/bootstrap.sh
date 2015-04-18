@@ -18,14 +18,15 @@ set -e
 
 # Check that the working directory is the root of the project
 if [[ ! -f './composer.json' ]]; then
-  echo 'No `composer.json` file found. You must `cd` into the root of your project before running this script.'
+  echo 'No `composer.json` file found.'
+  echo 'You must `cd` into the root of your project before running this script.'
   exit 1
 fi
 
 # Check that WP-CLI is installed
 wp_cli_path='./vendor/bin/wp'
 if [[ ! -f $wp_cli_path ]]; then
-  echo 'Missing `wp-cli` executable. Have you run `composer install` yet?'
+  echo 'Missing `wp-cli` executable; have you run `composer install` yet?'
   exit 1
 fi
 
