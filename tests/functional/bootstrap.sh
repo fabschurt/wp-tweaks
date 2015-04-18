@@ -23,6 +23,13 @@ if [[ ! -f './composer.json' ]]; then
   exit 1
 fi
 
+# Check that the test platform has been installed
+if [[ ! -d '/tmp/wordpress' ]]; then
+  echo 'The test WP installation has not been found.'
+  echo 'Please run `./vendor/bin/install-wp-test-platform` before running this script.'
+  exit 1
+fi
+
 # Check that WP-CLI is installed
 wp_cli_path='./vendor/bin/wp'
 if [[ ! -f $wp_cli_path ]]; then
