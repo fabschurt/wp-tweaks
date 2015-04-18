@@ -47,6 +47,9 @@ $wp_cli_path plugin install $archive_path --activate
 # Reset the test database
 php -r "require_once './vendor/autoload.php'; require_once '/tmp/wordpress-tests-lib/includes/bootstrap.php';"
 
+# Set the test theme
+$wp_cli_path theme activate twentythirteen
+
 # Insert test data
 desmond_user_id=$($wp_cli_path user create desmond_hume desmond.hume@the-hatch.void --user_pass=password --role=editor --porcelain)
 locke_user_id=$($wp_cli_path user create john_locke john.locke@box-factory.void --user_pass=password --role=editor --porcelain)
