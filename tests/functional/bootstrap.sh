@@ -52,8 +52,10 @@ desmond_user_id=$($wp_cli_path user create desmond_hume desmond.hume@the-hatch.v
 locke_user_id=$($wp_cli_path user create john_locke john.locke@box-factory.void --user_pass=password --role=editor --porcelain)
 post_1_id=$($wp_cli_path post create --post_title='See you in another life brother' --post_content='Are you him?' --post_author=${desmond_user_id} --post_status='publish' --porcelain)
 post_2_id=$($wp_cli_path post create --post_title="Don't tell me what I can't do" --post_content='4 8 15 16 23 42' --post_author=${locke_user_id} --post_status='publish' --porcelain)
+post_3_id=$($wp_cli_path post create --post_title='I was wrong' --post_content='108 00' --post_author=${locke_user_id} --post_status='publish' --porcelain)
 post_1_url=$($wp_cli_path post url ${post_1_id})
 post_2_url=$($wp_cli_path post url ${post_2_id})
+post_3_url=$($wp_cli_path post url ${post_3_id})
 
 # Dump variables
 tee .test_vars <<VARIABLES
@@ -63,6 +65,7 @@ export _casper_post_1_id=${test_post_1_id}
 export _casper_post_2_id=${test_post_2_id}
 export _casper_post_1_url=${post_1_url}
 export _casper_post_2_url=${post_2_url}
+export _casper_post_3_url=${post_3_url}
 VARIABLES
 
 # Clean exit
