@@ -36,9 +36,12 @@ fi
 # Echo everything to STDOUT
 set -x
 
-# Install the plugin in the test installation
+# Install a fresh version of the plugin in the test installation
 archive_path='/tmp/wordpress/wp-tweaks.zip'
-git archive --verbose --format=zip -0 > $archive_path HEAD
+git archive --format=zip -0 > $archive_path HEAD
+if [[ -z $($wp_cli_path plugin is-installed wp-tweaks) ]]; then
+  $wp_cli_path plugin uninstall wp-tweaks
+fi
 $wp_cli_path plugin install $archive_path --activate
 
 # Reset the test database
