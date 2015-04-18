@@ -16,10 +16,6 @@
 # Stop execution on first error
 set -e
 
-# Initial and final blank lines
-echo
-trap 'echo' EXIT
-
 # Check that the working directory is the root of the project
 if [[ ! -f './composer.json' ]]; then
   echo 'No `composer.json` file found. You must `cd` into the root of your project before running this script.'
