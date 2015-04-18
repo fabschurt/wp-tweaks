@@ -48,8 +48,18 @@ $wp_cli_path plugin install $archive_path --activate
 php -r "require_once './vendor/autoload.php'; require_once '/tmp/wordpress-tests-lib/includes/bootstrap.php';"
 
 # Insert test data
-test_user_id=$($wp_cli_path user create john_locke john.locke@box-factory.void --user_pass=password --role=editor --porcelain)
-test_post_id=$($wp_cli_path post create --post_title="Don't tell me what I can't do" --post_content='4 8 15 16 23 42' --post_author=${test_user_id} --post_status='publish' --porcelain)
+desmond_user_id=$($wp_cli_path user create desmond_hume desmond.hume@the-hatch.void --user_pass=password --role=editor --porcelain)
+locke_user_id=$($wp_cli_path user create john_locke john.locke@box-factory.void --user_pass=password --role=editor --porcelain)
+test_post_1_id=$($wp_cli_path post create --post_title="See you in another life brother" --post_content='Are you him?' --post_author=${desmond_user_id} --post_status='publish' --porcelain)
+test_post_2_id=$($wp_cli_path post create --post_title="Don't tell me what I can't do" --post_content='4 8 15 16 23 42' --post_author=${locke_user_id} --post_status='publish' --porcelain)
+
+# Dump variables
+tee .test_vars <<VARIABLES
+export _casper_desmond_user_id=${desmond_user_id}
+export _casper_locke_user_id=${locke_user_id}
+export _casper_test_post_1_id=${test_post_1_id}
+export _casper_test_post_2_id=${test_post_2_id}
+VARIABLES
 
 # Clean exit
 exit 0

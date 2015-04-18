@@ -25,4 +25,5 @@ fi
 # Run
 tests_dir='./tests/functional'
 ${tests_dir}/bootstrap.sh
+source .test_vars
 casperjs test --includes="${tests_dir}/common.js" "${tests_dir}/suite"
